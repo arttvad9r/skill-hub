@@ -7,9 +7,10 @@ Skill Hub separates agent configuration into three layers so specialized knowled
 `skillhub bootstrap` installs only:
 
 - `project-workflow` — development lifecycle router;
-- `skill-hub` — capability-selection router.
+- `skill-hub` — capability-selection router;
+- a `~/.local/bin/skillhub` symlink to the selected checkout.
 
-Personal `CLAUDE.md` / `AGENTS.md` preferences are never installed unless the user explicitly passes `--preferences`.
+The routing layer can target both agents (default) or only Claude/Codex with `--target`. Personal `CLAUDE.md` / `AGENTS.md` preferences are never installed unless the user explicitly passes `--preferences`; forced preference replacement creates a timestamped backup first. `skillhub unbootstrap` removes the routing skills/link belonging to this checkout and leaves user preference files untouched.
 
 ## 2. Inactive Hub catalog
 
@@ -66,9 +67,10 @@ An unmanaged directory is not automatically adopted even when its bytes happen t
 
 The Hub is deliberately explicit:
 
-1. update the canonical Hub;
-2. `skillhub status <project>` reports drift;
-3. `skillhub sync <project>` applies safe updates;
-4. locally modified copies require a human decision.
+1. move the canonical Hub checkout to an intentional release/revision;
+2. rerun `skillhub bootstrap` if the global routers should be refreshed;
+3. `skillhub status <project>` reports project drift;
+4. `skillhub sync <project>` applies safe updates;
+5. locally modified copies require a human decision.
 
 There is no silent auto-update from upstream and no global “install everything” mode.

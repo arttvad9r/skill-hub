@@ -18,6 +18,7 @@ SKILLS_DIR = HUB / "skills"
 GLOBAL_SKILLS_DIR = HUB / "global-skills"
 MANIFEST_NAME = ".skillhub.toml"
 MANIFEST_VERSION = 3
+VERSION = "0.4.1"
 TARGET_DIRS = {"claude": Path(".claude") / "skills", "codex": Path(".agents") / "skills"}
 # Agent Skills spec: lowercase letters, digits and single hyphens, at most 64 characters.
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -395,10 +396,12 @@ def command_verify(_: argparse.Namespace) -> int:
 
 def command_bootstrap(args: argparse.Namespace) -> int:
     global_names = ("project-workflow", "skill-hub")
-    destinations = {
+    selected_targets = target_list(args.target)
+    all_destinations = {
         "claude": Path.home() / ".claude" / "skills",
         "codex": Path.home() / ".codex" / "skills",
     }
+    destinations = {target: all_destinations[target] for target in selected_targets}
     conflicts: list[str] = []
     for target, base in destinations.items():
         for name in global_names:
@@ -408,10 +411,11 @@ def command_bootstrap(args: argparse.Namespace) -> int:
                 conflicts.append(f"{target}:{dst}")
 
     preference_src = Path(args.preferences).expanduser().resolve() if args.preferences else None
-    preference_destinations = {
-        "claude-config": Path.home() / ".claude" / "CLAUDE.md",
-        "codex-config": Path.home() / ".codex" / "AGENTS.md",
+    all_preference_destinations = {
+        "claude": Path.home() / ".claude" / "CLAUDE.md",
+        "codex": Path.home() / ".codex" / "AGENTS.md",
     }
+    preference_destinations = {target: all_preference_destinations[target] for target in selected_targets}
     if preference_src is not None:
         if not preference_src.is_file():
             raise ValueError(f"Preferences file does not exist: {preference_src}")
@@ -436,19 +440,86 @@ def command_bootstrap(args: argparse.Namespace) -> int:
                 shutil.rmtree(dst)
             shutil.copytree(src, dst, symlinks=True)
 
+    preference_backups: list[Path] = []
     if preference_src is not None:
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         for dst in preference_destinations.values():
             dst.parent.mkdir(parents=True, exist_ok=True)
+            if dst.exists() and dst.read_bytes() != preference_src.read_bytes():
+                backup = dst.with_name(f"{dst.name}.skillhub-backup-{stamp}")
+                shutil.copy2(dst, backup)
+                preference_backups.append(backup)
             shutil.copy2(preference_src, dst)
 
     link.parent.mkdir(parents=True, exist_ok=True)
     if link.exists() or link.is_symlink():
         link.unlink()
     link.symlink_to(desired)
-    print("Installed global routing skills for Claude Code and Codex")
+    print("Installed global routing skills for: " + ", ".join(selected_targets))
     if preference_src is not None:
         print(f"Installed explicit user preferences from {preference_src}")
+        for backup in preference_backups:
+            print(f"Backed up previous preferences: {backup}")
     print(f"Command: {link} -> {desired}")
+    if shutil.which("skillhub") is None:
+        print("Note: ~/.local/bin is not on PATH in this shell. Add it to PATH or invoke ~/.local/bin/skillhub directly.")
+    return 0
+
+
+def command_unbootstrap(args: argparse.Namespace) -> int:
+    """Remove only the global routing layer installed by this checkout."""
+    global_names = ("project-workflow", "skill-hub")
+    selected_targets = target_list(args.target)
+    all_destinations = {
+        "claude": Path.home() / ".claude" / "skills",
+        "codex": Path.home() / ".codex" / "skills",
+    }
+    destinations = {target: all_destinations[target] for target in selected_targets}
+    removals: list[Path] = []
+    conflicts: list[str] = []
+
+    for target, base in destinations.items():
+        for name in global_names:
+            src = GLOBAL_SKILLS_DIR / name
+            dst = base / name
+            if not dst.exists():
+                continue
+            if not dst.is_dir() or dst.is_symlink():
+                if not args.force:
+                    conflicts.append(f"{target}:{dst} (not an unchanged Skill Hub directory)")
+                    continue
+            elif tree_hash(dst) != tree_hash(src) and not args.force:
+                conflicts.append(f"{target}:{dst} (modified or from another Skill Hub version)")
+                continue
+            removals.append(dst)
+
+    link = Path.home() / ".local" / "bin" / "skillhub"
+    desired = HUB / "bin" / "skillhub"
+    remaining_routing_layer = any(
+        (base / name).exists()
+        for target, base in all_destinations.items()
+        if target not in selected_targets
+        for name in global_names
+    )
+    if (link.exists() or link.is_symlink()) and not remaining_routing_layer:
+        if link.is_symlink() and link.resolve() == desired.resolve():
+            removals.append(link)
+        elif args.force:
+            removals.append(link)
+        else:
+            conflicts.append(f"command:{link} (does not point to this checkout)")
+
+    if conflicts:
+        raise ValueError(
+            "Refusing to remove global files that do not match this Skill Hub checkout; "
+            "inspect them, or use --force if removal is intentional:\n  " + "\n  ".join(conflicts)
+        )
+
+    for path in removals:
+        remove_path(path)
+
+    print(f"Removed {len(removals)} global Skill Hub paths")
+    print("User preference files were left untouched.")
     return 0
 
 
@@ -757,15 +828,22 @@ def command_status(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Install curated project-local agent skills from this Skill Hub checkout.")
+    parser.add_argument("--version", action="version", version=f"skillhub {VERSION}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("verify", help="Validate the hub catalog and profiles.")
     p.set_defaults(func=command_verify)
 
     p = sub.add_parser("bootstrap", help="Install the minimal global routing skills and skillhub command for this checkout.")
-    p.add_argument("--preferences", help="Optional explicit file to copy to ~/.claude/CLAUDE.md and ~/.codex/AGENTS.md.")
+    p.add_argument("--target", choices=("both", "claude", "codex"), default="both", help="Install routing skills for both agents or only one (default: both).")
+    p.add_argument("--preferences", help="Optional explicit file to copy to the selected agent user config(s).")
     p.add_argument("--force", action="store_true")
     p.set_defaults(func=command_bootstrap)
+
+    p = sub.add_parser("unbootstrap", help="Remove this checkout's global routing skills and skillhub command; leave user preferences untouched.")
+    p.add_argument("--target", choices=("both", "claude", "codex"), default="both", help="Remove routing skills for both agents or only one (default: both).")
+    p.add_argument("--force", action="store_true")
+    p.set_defaults(func=command_unbootstrap)
 
     p = sub.add_parser("profiles", help="List available profiles.")
     p.set_defaults(func=command_profiles)

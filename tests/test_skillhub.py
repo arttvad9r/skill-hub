@@ -29,6 +29,12 @@ class SkillHubTests(unittest.TestCase):
         result = run("verify")
         self.assertIn("OK: 98 skills, 63 profiles", result.stdout)
 
+    def test_public_readme_catalog_count_matches_hub(self) -> None:
+        catalog = tomllib.loads((HUB / "catalog.toml").read_text())["skills"]
+        profiles = list((HUB / "profiles").glob("*.toml"))
+        readme = (HUB / "README.md").read_text()
+        self.assertIn(f"**{len(catalog)} skills across {len(profiles)} profiles**", readme)
+
     def test_android_compose_default_is_lean(self) -> None:
         result = run("show", "android-compose-app")
         skills = [line[2:] for line in result.stdout.splitlines() if line.startswith("- ")]
@@ -315,6 +321,106 @@ class SkillHubTests(unittest.TestCase):
             )
             self.assertEqual((home / ".claude/CLAUDE.md").read_text(), prefs.read_text())
             self.assertEqual((home / ".codex/AGENTS.md").read_text(), prefs.read_text())
+
+    def test_version_is_available_without_subcommand(self) -> None:
+        result = subprocess.run([str(CLI), "--version"], text=True, capture_output=True, check=True)
+        self.assertRegex(result.stdout.strip(), r"^skillhub \d+\.\d+\.\d+$")
+
+    def test_unbootstrap_removes_only_routing_layer(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="skillhub-unbootstrap-") as tmp:
+            home = Path(tmp)
+            claude_config = home / ".claude/CLAUDE.md"
+            codex_config = home / ".codex/AGENTS.md"
+            claude_config.parent.mkdir(parents=True)
+            codex_config.parent.mkdir(parents=True)
+            claude_config.write_text("keep claude\n")
+            codex_config.write_text("keep codex\n")
+            env = os.environ.copy()
+            env["HOME"] = str(home)
+            subprocess.run([str(CLI), "bootstrap"], text=True, capture_output=True, check=True, env=env)
+            subprocess.run([str(CLI), "unbootstrap"], text=True, capture_output=True, check=True, env=env)
+            self.assertFalse((home / ".claude/skills/project-workflow").exists())
+            self.assertFalse((home / ".claude/skills/skill-hub").exists())
+            self.assertFalse((home / ".codex/skills/project-workflow").exists())
+            self.assertFalse((home / ".codex/skills/skill-hub").exists())
+            self.assertFalse((home / ".local/bin/skillhub").exists())
+            self.assertEqual(claude_config.read_text(), "keep claude\n")
+            self.assertEqual(codex_config.read_text(), "keep codex\n")
+
+    def test_bootstrap_can_target_one_agent(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="skillhub-one-target-") as tmp:
+            home = Path(tmp)
+            env = os.environ.copy()
+            env["HOME"] = str(home)
+            subprocess.run(
+                [str(CLI), "bootstrap", "--target", "codex"],
+                text=True,
+                capture_output=True,
+                check=True,
+                env=env,
+            )
+            self.assertTrue((home / ".codex/skills/project-workflow").is_dir())
+            self.assertTrue((home / ".codex/skills/skill-hub").is_dir())
+            self.assertFalse((home / ".claude/skills/project-workflow").exists())
+            subprocess.run(
+                [str(CLI), "unbootstrap", "--target", "codex"],
+                text=True,
+                capture_output=True,
+                check=True,
+                env=env,
+            )
+            self.assertFalse((home / ".codex/skills/project-workflow").exists())
+
+    def test_targeted_unbootstrap_keeps_shared_cli_when_other_agent_remains(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="skillhub-partial-unbootstrap-") as tmp:
+            home = Path(tmp)
+            env = os.environ.copy()
+            env["HOME"] = str(home)
+            subprocess.run([str(CLI), "bootstrap"], text=True, capture_output=True, check=True, env=env)
+            link = home / ".local/bin/skillhub"
+            self.assertTrue(link.is_symlink())
+            subprocess.run(
+                [str(CLI), "unbootstrap", "--target", "codex"],
+                text=True, capture_output=True, check=True, env=env,
+            )
+            self.assertTrue((home / ".claude/skills/project-workflow").is_dir())
+            self.assertFalse((home / ".codex/skills/project-workflow").exists())
+            self.assertTrue(link.is_symlink())
+            subprocess.run(
+                [str(CLI), "unbootstrap", "--target", "claude"],
+                text=True, capture_output=True, check=True, env=env,
+            )
+            self.assertFalse(link.exists())
+
+    def test_force_preferences_creates_backup(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="skillhub-prefs-backup-") as tmp:
+            home = Path(tmp) / "home"
+            home.mkdir()
+            claude_config = home / ".claude/CLAUDE.md"
+            codex_config = home / ".codex/AGENTS.md"
+            claude_config.parent.mkdir(parents=True)
+            codex_config.parent.mkdir(parents=True)
+            claude_config.write_text("old claude\n")
+            codex_config.write_text("old codex\n")
+            prefs = Path(tmp) / "prefs.md"
+            prefs.write_text("new preferences\n")
+            env = os.environ.copy()
+            env["HOME"] = str(home)
+            subprocess.run(
+                [str(CLI), "bootstrap", "--preferences", str(prefs), "--force"],
+                text=True,
+                capture_output=True,
+                check=True,
+                env=env,
+            )
+            self.assertEqual(claude_config.read_text(), prefs.read_text())
+            self.assertEqual(codex_config.read_text(), prefs.read_text())
+            claude_backups = list(claude_config.parent.glob("CLAUDE.md.skillhub-backup-*"))
+            codex_backups = list(codex_config.parent.glob("AGENTS.md.skillhub-backup-*"))
+            self.assertEqual(len(claude_backups), 1)
+            self.assertEqual(len(codex_backups), 1)
+            self.assertEqual(claude_backups[0].read_text(), "old claude\n")
+            self.assertEqual(codex_backups[0].read_text(), "old codex\n")
 
 
 class FixtureHubTests(unittest.TestCase):

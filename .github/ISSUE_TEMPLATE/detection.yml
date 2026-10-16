@@ -1,0 +1,34 @@
+name: Detection or profile selection issue
+description: Report a repository that is detected incorrectly or receives the wrong base profile
+title: "[detect] "
+labels: [bug]
+body:
+  - type: textarea
+    id: facts
+    attributes:
+      label: Repository facts
+      description: What framework/platform/build files are actually present?
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Current detection output
+      description: Paste `skillhub detect <project>`.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected base profile(s)
+      description: What should be selected, and what evidence in the repository justifies it?
+    validations:
+      required: true
+  - type: textarea
+    id: version
+    attributes:
+      label: Version and environment
+      description: `skillhub --version`, release/commit, OS, Python version.
+    validations:
+      required: true

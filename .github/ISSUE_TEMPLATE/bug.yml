@@ -11,6 +11,23 @@ body:
     validations:
       required: true
   - type: textarea
+    id: version
+    attributes:
+      label: Version
+      description: Paste `skillhub --version`, the release tag/commit, and Claude Code/Codex version if relevant.
+      placeholder: |
+        skillhub 0.4.1
+        v0.4.1 / <commit>
+        Claude Code ... / Codex ...
+    validations:
+      required: true
+  - type: textarea
+    id: status
+    attributes:
+      label: Skill Hub status
+      description: Paste `skillhub status <project>` when the project has a `.skillhub.toml` manifest.
+      render: text
+  - type: textarea
     id: safety
     attributes:
       label: Did this overwrite/delete files or affect unmanaged content?
@@ -21,6 +38,6 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: OS, Python version, Claude Code/Codex version, and relevant profile(s).
+      description: OS, Python version, shell, agent, and relevant profile(s).
     validations:
       required: true
