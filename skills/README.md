@@ -1,15 +1,28 @@
-# Discipline skills
+# Skills library
 
-Cross-engine Agent Skills organized by game-development discipline — for example
-art direction and asset production, gameplay programming, physics, AI, audio,
-shaders/graphics, UI/UX, tools, and performance optimization.
+This directory is the **inactive specialist-skill library** used by Skill Hub.
 
-Each subdirectory is one skill: a folder containing a `SKILL.md` (and optional
-`references/`, `scripts/`, `assets/`, and `agents/`). Folder name must equal the
-skill's `name` frontmatter field.
+Skills here are not loaded globally. `skillhub install` copies only the skills selected by a project's profiles into:
 
-Start with [`create-game-assets`](create-game-assets/SKILL.md) when the task needs
-a cohesive sprite, tileset, texture, UI-art, or 3D-asset family rather than a
-single disposable image.
+- `.claude/skills/` for Claude Code;
+- `.agents/skills/` for Codex.
 
-See [`docs/SKILL-FORMAT.md`](../../docs/SKILL-FORMAT.md) for the authoring standard.
+Each directory contains one Agent Skill with a `SKILL.md` file and, when needed, references, scripts, assets, or upstream license material.
+
+## Browse the library
+
+The generated [catalog](../CATALOG.md) is the easiest way to browse all current skills and profiles from GitHub. It includes category, source, pinned revision, and license metadata.
+
+For third-party attribution and license locations, see [THIRD_PARTY.md](../THIRD_PARTY.md).
+
+## Do not install everything
+
+The library is intentionally larger than any one project should receive. Prefer curated profiles and install only capabilities justified by the repository or the current task:
+
+```bash
+skillhub detect .
+skillhub show android-compose-app
+skillhub install --project . --profile android-compose-app
+```
+
+Project-local copies are tracked in `.skillhub.toml`; `skillhub status` and `skillhub sync` manage updates without silently replacing local edits.

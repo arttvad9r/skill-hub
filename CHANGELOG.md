@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.4.1 — 2026-10-16 — Repository and onboarding polish
+
+- Rework README around the user outcome, automatic project routing, reproducible quick start, safe lifecycle, and common recipes.
+- Add generated `CATALOG.md`, profile recipes, FAQ, and catalog freshness checks.
+- Add `skillhub --version`, target-specific bootstrap/unbootstrap, safe global uninstall, and backups before forced preference replacement.
+- Expand public issue/PR templates, private vulnerability reporting guidance, and third-party provenance documentation.
+- Add a Claude Code real-agent bootstrap eval alongside the Codex harness and publish recorded results.
+- Extend deterministic CI to Linux and macOS.
+
 ## v0.4.0 — 2026-10-16 — Public launch
 
 - Make bootstrap safe for public use: personal preferences are opt-in via `--preferences`.
@@ -10,6 +19,8 @@
 - Refuse implicit adoption of unmanaged skills even when their contents match the Hub.
 - Reject symlinks inside installable skill packages.
 - Add public architecture, security, and contribution documentation.
+
+The public repository intentionally starts from a clean v0.4-era history; pre-public development history was kept private rather than publishing machine-specific/personal setup history.
 
 ## Post-v0.3 hardening
 

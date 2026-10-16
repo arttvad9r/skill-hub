@@ -15,7 +15,26 @@ from pathlib import Path
 PROMPT = """Create a new minimal Android app named SkillHubProbe using Kotlin and Jetpack Compose. One screen should show text and one button. This is a new project. Choose reasonable current technical defaults yourself, make the repository easy for another AI agent to continue, and run local build/static checks that are available. Do not use an emulator or physical device in this eval. Do not make a git commit. Keep the implementation minimal."""
 EXPECTED_SKILLS = ["android-cli", "android-emu", "edge-to-edge"]
 # Any direct ADB/emulator invocation or an android-emu lease counts as device use.
-DEVICE_COMMAND = re.compile(r"(?:^|[\s;&|(`'\"/])(?:adb|emulator|android-emu\s+(?:claim|start|boot))(?:\s|$)")
+DEVICE_COMMAND = re.compile(
+    r"(?:^|[;&|]\s*|\n\s*)(?:[A-Za-z_][A-Za-z0-9_]*=\S+\s+)*(?:adb(?:\s|$)|emulator(?:\s|$)|android-emu\s+(?:claim|start|boot)(?:\s|$))"
+)
+
+
+def strip_heredoc_bodies(command: str) -> str:
+    """Remove here-doc payloads before checking which shell commands actually ran."""
+    lines = command.splitlines()
+    kept: list[str] = []
+    delimiter: str | None = None
+    for line in lines:
+        if delimiter is not None:
+            if line.strip() == delimiter:
+                delimiter = None
+            continue
+        kept.append(line)
+        match = re.search(r"<<-?\s*['\"]?([A-Za-z_][A-Za-z0-9_]*)['\"]?", line)
+        if match:
+            delimiter = match.group(1)
+    return "\n".join(kept)
 
 
 def run(cmd: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -103,7 +122,9 @@ def main() -> int:
             if e.get("type") in {"item.started", "item.completed"}
             and e.get("item", {}).get("type") == "command_execution"
         ]
-        device_commands = [command for command in commands if DEVICE_COMMAND.search(command)]
+        device_commands = [
+            command for command in commands if DEVICE_COMMAND.search(strip_heredoc_bodies(command))
+        ]
         assert not device_commands, f"eval used a device or emulator despite the prompt: {device_commands}"
 
         manifest_path = project / ".skillhub.toml"

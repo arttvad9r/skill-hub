@@ -9,12 +9,28 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Compile Python entrypoints
-        run: python3 -m py_compile bin/skillhub tests/test_skillhub.py evals/codex_bootstrap_e2e.py
+        run: >-
+          python3 -m py_compile
+          bin/skillhub
+          tools/render_catalog.py
+          tests/test_skillhub.py
+          tests/test_evals.py
+          evals/codex_bootstrap_e2e.py
+          evals/claude_bootstrap_e2e.py
       - name: Verify catalog and profiles
         run: python3 bin/skillhub verify
+      - name: Verify generated catalog
+        run: python3 tools/render_catalog.py --check
       - name: Run deterministic tests
         run: python3 -m unittest discover -s tests -v

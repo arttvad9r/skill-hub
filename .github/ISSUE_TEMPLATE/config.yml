@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and usage help
+    url: https://github.com/arttvad9r/skill-hub/discussions
+    about: Ask how to choose profiles, update projects, or use Skill Hub with your agent.
+  - name: Security vulnerability
+    url: https://github.com/arttvad9r/skill-hub/security/advisories/new
+    about: Report path/ownership/supply-chain vulnerabilities privately.
