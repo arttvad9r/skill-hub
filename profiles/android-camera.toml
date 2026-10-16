@@ -1,0 +1,3 @@
+name = "android-camera"
+description = "CameraX implementation guidance."
+skills = ["camerax"]

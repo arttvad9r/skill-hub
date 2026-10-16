@@ -1,0 +1,3 @@
+name = "game-narrative"
+description = "Dialogue, narrative state, and save/versioning systems."
+skills = ["dialogue-systems", "save-systems"]

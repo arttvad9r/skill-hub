@@ -1,0 +1,14 @@
+# Local migration/recovery material
+backups/
+
+# Python/runtime caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Editor / OS noise
+.idea/
+.vscode/
+.DS_Store
+*~

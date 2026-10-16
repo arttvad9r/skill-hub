@@ -1,0 +1,3 @@
+name = "game-genre-roguelike"
+description = "Genre glue for roguelike games; compose with the relevant engine and discipline profiles."
+skills = ["roguelike"]

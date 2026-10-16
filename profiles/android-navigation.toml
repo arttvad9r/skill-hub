@@ -1,0 +1,3 @@
+name = "android-navigation"
+description = "Navigation 3 and predictive/back event handling."
+skills = ["navigation-3", "navigation-event"]

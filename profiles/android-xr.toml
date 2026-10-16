@@ -1,0 +1,3 @@
+name = "android-xr"
+description = "Android XR / display glasses Compose Glimmer guidance."
+skills = ["display-glasses-with-jetpack-compose-glimmer"]

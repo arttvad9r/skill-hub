@@ -1,0 +1,4 @@
+name = "android-game"
+description = "Base profile for an Android game. Add focused game packs as product requirements make them factual."
+extends = ["android-app", "game-core"]
+skills = []

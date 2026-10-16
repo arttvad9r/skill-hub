@@ -1,0 +1,4 @@
+name = "design-web"
+description = "Full web UI design pack: cross-platform design core, product design system, focused web tools, and final web audit."
+extends = ["design", "design-web-tools", "design-web-audit"]
+skills = []

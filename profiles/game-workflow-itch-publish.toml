@@ -1,0 +1,3 @@
+name = "game-workflow-itch-publish"
+description = "Game-development workflow guidance for itch-publish."
+skills = ["itch-publish"]

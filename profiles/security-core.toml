@@ -1,0 +1,3 @@
+name = "security-core"
+description = "Secure coding guidance across application, infrastructure, authentication, input, storage, and network boundaries."
+skills = ["code-security"]

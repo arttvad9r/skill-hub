@@ -1,0 +1,3 @@
+name = "android-wear"
+description = "Wear OS Compose Material 3 and widget guidance."
+skills = ["wear-compose-m3", "wear-widgets"]

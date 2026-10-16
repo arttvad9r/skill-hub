@@ -1,0 +1,3 @@
+name = "android-glance"
+description = "Glance widget canonical layouts."
+skills = ["glance-canonical-layouts"]

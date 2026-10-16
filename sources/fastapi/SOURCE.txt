@@ -1,0 +1,4 @@
+source=https://github.com/fastapi/fastapi
+path=fastapi/.agents/skills/fastapi
+revision=0b919816378eaa773df7ce4204414c712c9fdbea
+imported=2026-10-16

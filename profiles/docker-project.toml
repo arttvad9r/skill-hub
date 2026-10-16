@@ -1,0 +1,4 @@
+name = "docker-project"
+description = "Bootstrap a new Dockerized project with foundations, image-build guidance, Compose patterns, and destructive-operation guardrails."
+extends = ["docker-build", "docker-compose"]
+skills = ["docker-project-foundations"]

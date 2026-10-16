@@ -1,0 +1,3 @@
+name = "game-genre-rpg"
+description = "Genre glue for rpg games; compose with the relevant engine and discipline profiles."
+skills = ["rpg"]

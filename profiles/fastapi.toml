@@ -1,0 +1,3 @@
+name = "fastapi"
+description = "Official FastAPI best practices for APIs, Pydantic, dependencies, streaming, observability, and frontend serving."
+skills = ["fastapi"]

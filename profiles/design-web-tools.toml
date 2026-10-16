@@ -1,0 +1,3 @@
+name = "design-web-tools"
+description = "Focused web UI cleanup, component exploration, HTML accessibility/metadata, and browser motion performance."
+skills = ["baseline-ui", "component-canvas", "fixing-accessibility", "fixing-metadata", "fixing-motion-performance"]

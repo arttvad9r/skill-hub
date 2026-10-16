@@ -1,0 +1,20 @@
+name: Skill Hub checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile Python entrypoints
+        run: python3 -m py_compile bin/skillhub tests/test_skillhub.py evals/codex_bootstrap_e2e.py
+      - name: Verify catalog and profiles
+        run: python3 bin/skillhub verify
+      - name: Run deterministic tests
+        run: python3 -m unittest discover -s tests -v

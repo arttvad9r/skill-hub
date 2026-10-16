@@ -1,0 +1,3 @@
+name = "android-device-ai"
+description = "On-device Android AI: AppFunctions, LiteRT, and ML Kit GenAI prompt APIs."
+skills = ["appfunctions", "litert-runtime", "ml-kit-genai-prompt-api"]

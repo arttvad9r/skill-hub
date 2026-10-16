@@ -1,0 +1,3 @@
+name = "game-core"
+description = "Engine-neutral fundamentals useful in most game projects."
+skills = ["input-systems", "game-ui-ux", "performance-optimization"]

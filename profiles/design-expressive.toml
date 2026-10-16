@@ -1,0 +1,3 @@
+name = "design-expressive"
+description = "Optional high-variance editorial/Awwwards-style web direction and GSAP motion. Use only for explicitly expressive public-facing sites."
+skills = ["gpt-taste"]

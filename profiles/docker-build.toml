@@ -1,0 +1,4 @@
+name = "docker-build"
+description = "Dockerfile build, caching, image-size, runtime-user, and hardening guidance."
+extends = ["docker-safety"]
+skills = ["docker-build-strategies"]

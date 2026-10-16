@@ -1,0 +1,4 @@
+name = "game-full"
+description = "All curated engine-neutral game-development packs."
+extends = ["game-core", "game-action", "game-art", "game-levels", "game-ai", "game-narrative", "game-procedural"]
+skills = []

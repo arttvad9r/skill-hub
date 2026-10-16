@@ -1,0 +1,4 @@
+name = "android-app"
+description = "Minimal Android application profile. Add testing, navigation, security, performance, or feature packs only when the task requires them."
+extends = ["android-core"]
+skills = []

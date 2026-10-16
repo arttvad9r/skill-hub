@@ -1,0 +1,3 @@
+name = "game-genre-platformer"
+description = "Genre glue for platformer games; compose with the relevant engine and discipline profiles."
+skills = ["platformer"]

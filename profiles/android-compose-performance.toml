@@ -1,0 +1,3 @@
+name = "android-compose-performance"
+description = "Jetpack Compose performance-specific guidance."
+skills = ["jetpack-compose-performance"]

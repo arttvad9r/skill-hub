@@ -1,0 +1,3 @@
+name = "game-genre-card-game"
+description = "Genre glue for card-game games; compose with the relevant engine and discipline profiles."
+skills = ["card-game"]

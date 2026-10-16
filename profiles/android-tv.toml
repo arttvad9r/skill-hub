@@ -1,0 +1,3 @@
+name = "android-tv"
+description = "Android TV migration and Compose TV guidance."
+skills = ["leanback-to-compose-tv-migration"]

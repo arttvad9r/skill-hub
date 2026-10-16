@@ -1,0 +1,4 @@
+name = "design"
+description = "Default UI/UX design pack for app, desktop, and web interface work."
+extends = ["design-core", "design-system"]
+skills = []

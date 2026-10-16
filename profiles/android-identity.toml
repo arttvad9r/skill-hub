@@ -1,0 +1,3 @@
+name = "android-identity"
+description = "Android identity, credential restore, and verified-email flows."
+skills = ["restore-credentials", "verified-email"]

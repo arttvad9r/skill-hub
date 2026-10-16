@@ -1,0 +1,4 @@
+name = "android-compose-app"
+description = "Minimal Jetpack Compose application profile: Android tooling plus modern edge-to-edge guidance. Add adaptive and testing packs only when factual."
+extends = ["android-app"]
+skills = ["edge-to-edge"]

@@ -1,0 +1,3 @@
+name = "game-genre-fps-shooter"
+description = "Genre glue for fps-shooter games; compose with the relevant engine and discipline profiles."
+skills = ["fps-shooter"]

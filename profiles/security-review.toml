@@ -1,0 +1,3 @@
+name = "security-review"
+description = "General code security review with secure-coding guidance plus static-analysis workflow."
+extends = ["security-core", "security-scan"]

@@ -1,0 +1,820 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import shutil
+import sys
+import tomllib
+from datetime import datetime, timezone
+from pathlib import Path
+
+HUB = Path(__file__).resolve().parents[1]
+CATALOG_PATH = HUB / "catalog.toml"
+PROFILES_DIR = HUB / "profiles"
+SKILLS_DIR = HUB / "skills"
+GLOBAL_SKILLS_DIR = HUB / "global-skills"
+MANIFEST_NAME = ".skillhub.toml"
+MANIFEST_VERSION = 3
+TARGET_DIRS = {"claude": Path(".claude") / "skills", "codex": Path(".agents") / "skills"}
+# Agent Skills spec: lowercase letters, digits and single hyphens, at most 64 characters.
+NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+LICENSE_RE = re.compile(r"licen[cs]e|copying|notice", re.IGNORECASE)
+REQUIRED_CATALOG_FIELDS = ("category", "source", "revision", "source_url", "license")
+
+
+def check_name(name: object, kind: str = "skill") -> str:
+    if not isinstance(name, str) or len(name) > 64 or not NAME_RE.fullmatch(name):
+        raise ValueError(f"Invalid {kind} name: {name!r}")
+    return name
+
+
+def load_toml(path: Path) -> dict:
+    with path.open("rb") as handle:
+        return tomllib.load(handle)
+
+
+def catalog() -> dict[str, dict]:
+    return load_toml(CATALOG_PATH).get("skills", {})
+
+
+def load_profile(name: str) -> dict:
+    path = PROFILES_DIR / f"{check_name(name, 'profile')}.toml"
+    if not path.is_file():
+        raise ValueError(f"Unknown profile: {name}")
+    data = load_toml(path)
+    if data.get("name") != name:
+        raise ValueError(f"Profile name mismatch in {path}")
+    return data
+
+
+def resolve_profile(name: str, stack: tuple[str, ...] = ()) -> list[str]:
+    if name in stack:
+        raise ValueError(f"Profile cycle: {' -> '.join(stack + (name,))}")
+    data = load_profile(name)
+    result: list[str] = []
+    for parent in data.get("extends", []):
+        result.extend(resolve_profile(parent, stack + (name,)))
+    result.extend(data.get("skills", []))
+    return unique(result)
+
+
+def unique(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            result.append(value)
+    return result
+
+
+def tree_hash(path: Path) -> str:
+    digest = hashlib.sha256()
+    for item in sorted(p for p in path.rglob("*") if p.is_file()):
+        rel = item.relative_to(path).as_posix()
+        if "/__pycache__/" in f"/{rel}/" or rel.endswith(".pyc"):
+            continue
+        digest.update(rel.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(item.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def shallow_files(project: Path, pattern: str) -> list[Path]:
+    """Files matching pattern at the project root or up to two directories deep."""
+    candidates = (
+        list(project.glob(pattern))
+        + list(project.glob(f"*/{pattern}"))
+        + list(project.glob(f"*/*/{pattern}"))
+    )
+    ignored = {"node_modules", "build", "dist", "target", "vendor"}
+    result: list[Path] = []
+    for path in candidates:
+        if not path.is_file():
+            continue
+        rel = path.relative_to(project)
+        if any(part in ignored or part.startswith(".") for part in rel.parts[:-1]):
+            continue
+        result.append(path)
+    return result
+
+
+def project_facts(project: Path) -> tuple[list[str], list[str]]:
+    facts: list[str] = []
+    profiles: list[str] = []
+
+    gradle_files = shallow_files(project, "*.gradle") + shallow_files(project, "*.gradle.kts")
+    gradle_files += shallow_files(project, "libs.versions.toml")
+    gradle_text = "\n".join(p.read_text(encoding="utf-8", errors="ignore") for p in gradle_files)
+    manifests = shallow_files(project, "src/main/AndroidManifest.xml")
+    android = (
+        bool(manifests)
+        or "com.android.application" in gradle_text
+        or "com.android.library" in gradle_text
+        or "android.application" in gradle_text.lower()
+        or "android.library" in gradle_text.lower()
+    )
+    if android:
+        facts.append("android")
+        lower_gradle = gradle_text.lower()
+        compose = any(marker in lower_gradle for marker in (
+            "org.jetbrains.kotlin.plugin.compose",
+            "compose = true",
+            "androidx.compose",
+            "libs.plugins.compose",
+            "libs.plugins.kotlin.compose",
+        ))
+        if not compose:
+            for source in project.glob("*/src/**/*.kt"):
+                if any(part in {"build", ".gradle"} for part in source.parts):
+                    continue
+                try:
+                    if "androidx.compose" in source.read_text(encoding="utf-8", errors="ignore"):
+                        compose = True
+                        break
+                except OSError:
+                    pass
+        if compose:
+            facts.append("jetpack-compose")
+            profiles.append("android-compose-app")
+        else:
+            profiles.append("android-app")
+
+    if (project / "project.godot").is_file():
+        facts.append("godot")
+        profiles.append("game-core")
+        export_presets = project / "export_presets.cfg"
+        if export_presets.is_file():
+            export_text = export_presets.read_text(encoding="utf-8", errors="ignore").lower()
+            if 'platform="android"' in export_text or 'platform = "android"' in export_text:
+                facts.append("android-export")
+                profiles.append("android-core")
+    if (project / "Assets").is_dir() and (project / "ProjectSettings").is_dir():
+        facts.append("unity")
+        profiles.append("game-core")
+    if any(project.glob("*.uproject")):
+        facts.append("unreal")
+        profiles.append("game-core")
+
+    lower_gradle = gradle_text.lower()
+    if android and any(marker in lower_gradle for marker in ("libgdx", "korge", "korlibs")):
+        facts.append("android-game-framework")
+        profiles = [p for p in profiles if p not in ("android-app", "android-compose-app")]
+        profiles.append("android-game")
+
+    dockerfiles = shallow_files(project, "Dockerfile*")
+    compose_files: list[Path] = []
+    for pattern in ("compose.yaml", "compose.yml", "docker-compose.yaml", "docker-compose.yml"):
+        compose_files.extend(shallow_files(project, pattern))
+    if dockerfiles:
+        facts.append("dockerfile")
+        profiles.append("docker-build")
+    if compose_files:
+        facts.append("docker-compose")
+        profiles.append("docker-compose")
+
+    dependency_files: list[Path] = []
+    for pattern in ("pyproject.toml", "requirements*.txt", "uv.lock", "Pipfile"):
+        dependency_files.extend(shallow_files(project, pattern))
+    dependency_text = "\n".join(
+        path.read_text(encoding="utf-8", errors="ignore") for path in unique(dependency_files)
+    ).lower()
+    if "fastapi" in dependency_text:
+        facts.append("fastapi")
+        profiles.append("fastapi")
+
+    return unique(facts), unique(profiles)
+
+
+def target_list(target: str) -> list[str]:
+    return ["claude", "codex"] if target == "both" else [target]
+
+
+def skill_base(project: Path, target: str) -> Path:
+    base = project / TARGET_DIRS[target]
+    if not base.resolve().is_relative_to(project.resolve()):
+        raise ValueError(f"Refusing to use skill directory outside the project: {base}")
+    return base
+
+
+def skill_dest(project: Path, target: str, name: str) -> Path:
+    base = skill_base(project, target)
+    dst = base / check_name(name)
+    if dst.is_symlink():
+        raise ValueError(f"Refusing to manage a symlinked skill path: {dst}")
+    if dst.resolve().parent != base.resolve():
+        raise ValueError(f"Refusing to use skill path outside {base}: {dst}")
+    return dst
+
+
+def read_manifest(project: Path) -> dict:
+    """Read and validate .skillhub.toml; older manifests are upgraded in memory."""
+    path = project / MANIFEST_NAME
+    if not path.is_file():
+        return {}
+    data = load_toml(path)
+    version = data.get("version", 1)
+    if version not in (1, 2, MANIFEST_VERSION):
+        raise ValueError(f"Unsupported {MANIFEST_NAME} version: {version}")
+    targets = list(data.get("targets", []))
+    for target in targets:
+        if target not in TARGET_DIRS:
+            raise ValueError(f"Unknown target in {MANIFEST_NAME}: {target!r}")
+    items: dict[str, dict] = {}
+    for item in data.get("skills", []):
+        name = check_name(item.get("name"))
+        hashes = item.get("hashes")
+        if hashes is None:
+            # v1 recorded one hash that applied to every listed target.
+            hashes = {target: item.get("sha256", "") for target in targets}
+        for target, value in hashes.items():
+            if target not in TARGET_DIRS or not isinstance(value, str):
+                raise ValueError(f"Invalid hashes for skill {name} in {MANIFEST_NAME}")
+        sources = item.get("sources")
+        revisions = item.get("revisions")
+        if sources is None:
+            sources = {target: str(item.get("source", "unknown")) for target in hashes}
+        if revisions is None:
+            revisions = {target: str(item.get("revision", "unknown")) for target in hashes}
+        for field, values in (("sources", sources), ("revisions", revisions)):
+            if not isinstance(values, dict):
+                raise ValueError(f"Invalid {field} for skill {name} in {MANIFEST_NAME}")
+            for target, value in values.items():
+                if target not in TARGET_DIRS or not isinstance(value, str):
+                    raise ValueError(f"Invalid {field} for skill {name} in {MANIFEST_NAME}")
+        if set(sources) != set(hashes) or set(revisions) != set(hashes):
+            raise ValueError(f"Per-target provenance does not match hashes for skill {name} in {MANIFEST_NAME}")
+        items[name] = {"sources": dict(sources), "revisions": dict(revisions), "hashes": dict(hashes)}
+    return {
+        "profiles": [check_name(x, "profile") for x in data.get("profiles", [])],
+        "explicit_skills": [check_name(x) for x in data.get("explicit_skills", [])],
+        "targets": targets,
+        "skills": items,
+    }
+
+
+def q(value: str) -> str:
+    return json.dumps(value, ensure_ascii=False)
+
+
+def write_manifest(
+    project: Path,
+    profiles: list[str],
+    explicit_skills: list[str],
+    targets: list[str],
+    items: dict[str, dict],
+) -> None:
+    lines = [
+        f"version = {MANIFEST_VERSION}",
+        f"updated_at = {q(datetime.now(timezone.utc).isoformat())}",
+        "profiles = [" + ", ".join(q(x) for x in profiles) + "]",
+        "explicit_skills = [" + ", ".join(q(x) for x in explicit_skills) + "]",
+        "targets = [" + ", ".join(q(x) for x in targets) + "]",
+        "",
+    ]
+    for name, item in items.items():
+        sources = ", ".join(f"{target} = {q(value)}" for target, value in sorted(item["sources"].items()))
+        revisions = ", ".join(f"{target} = {q(value)}" for target, value in sorted(item["revisions"].items()))
+        hashes = ", ".join(f"{target} = {q(value)}" for target, value in sorted(item["hashes"].items()))
+        lines += [
+            "[[skills]]",
+            f"name = {q(name)}",
+            f"sources = {{ {sources} }}",
+            f"revisions = {{ {revisions} }}",
+            f"hashes = {{ {hashes} }}",
+            "",
+        ]
+    (project / MANIFEST_NAME).write_text("\n".join(lines), encoding="utf-8")
+
+
+def frontmatter(path: Path) -> dict[str, str]:
+    """Minimal parser for the name/description fields of SKILL.md YAML frontmatter."""
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    if not lines or lines[0].strip() != "---":
+        raise ValueError("missing YAML frontmatter")
+    try:
+        end = next(i for i in range(1, len(lines)) if lines[i].strip() == "---")
+    except StopIteration:
+        raise ValueError("unterminated YAML frontmatter") from None
+    body = lines[1:end]
+    result: dict[str, str] = {}
+    i = 0
+    while i < len(body):
+        match = re.match(r"^([A-Za-z_][\w-]*):\s*(.*)$", body[i])
+        i += 1
+        if not match:
+            continue
+        key, value = match.group(1), match.group(2).strip()
+        if value in ("", "|", ">", "|-", ">-", "|+", ">+"):
+            block: list[str] = []
+            while i < len(body) and (not body[i].strip() or body[i][:1].isspace()):
+                block.append(body[i].strip())
+                i += 1
+            value = " ".join(x for x in block if x)
+        elif len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+            value = value[1:-1]
+        result[key] = value
+    return result
+
+
+def skill_errors(skill_dir: Path) -> list[str]:
+    symlinks = [p.relative_to(skill_dir).as_posix() for p in skill_dir.rglob("*") if p.is_symlink()]
+    if symlinks:
+        return ["contains symlink(s): " + ", ".join(symlinks[:5])]
+    path = skill_dir / "SKILL.md"
+    if not path.is_file():
+        return ["missing SKILL.md"]
+    try:
+        meta = frontmatter(path)
+    except ValueError as exc:
+        return [str(exc)]
+    errors: list[str] = []
+    if meta.get("name") != skill_dir.name:
+        errors.append(f"frontmatter name {meta.get('name')!r} does not match directory")
+    description = meta.get("description", "")
+    if not description:
+        errors.append("missing description")
+    elif len(description) > 1024:
+        errors.append(f"description is {len(description)} characters (limit 1024)")
+    return errors
+
+
+def command_verify(_: argparse.Namespace) -> int:
+    cat = catalog()
+    errors: list[str] = []
+    for name in sorted(cat):
+        meta = cat[name]
+        try:
+            check_name(name)
+        except ValueError as exc:
+            errors.append(str(exc))
+            continue
+        skill_dir = SKILLS_DIR / name
+        errors += [f"{name}: {e}" for e in skill_errors(skill_dir)]
+        missing = [field for field in REQUIRED_CATALOG_FIELDS if not str(meta.get(field, "")).strip()]
+        if missing:
+            errors.append(f"{name}: catalog entry lacks {', '.join(missing)}")
+        license_file = meta.get("license_file")
+        if not license_file:
+            errors.append(f"{name}: catalog license_file is missing or does not exist")
+        else:
+            license_path = (HUB / str(license_file)).resolve()
+            if not license_path.is_relative_to(HUB.resolve()) or not license_path.is_file():
+                errors.append(f"{name}: catalog license_file must be an existing file inside the Hub")
+        if meta.get("source") != "local" and skill_dir.is_dir() and not any(
+            LICENSE_RE.search(p.name) for p in skill_dir.iterdir() if p.is_file()
+        ):
+            errors.append(f"{name}: vendored skill has no upstream license file in its directory")
+    for path in sorted(SKILLS_DIR.iterdir()):
+        if path.is_dir() and path.name not in cat:
+            errors.append(f"Skill directory not in catalog: {path.name}")
+    for name in ("project-workflow", "skill-hub"):
+        errors += [f"global {name}: {e}" for e in skill_errors(GLOBAL_SKILLS_DIR / name)]
+    profile_files = sorted(PROFILES_DIR.glob("*.toml"))
+    for path in profile_files:
+        name = path.stem
+        try:
+            if not load_profile(name).get("description"):
+                errors.append(f"Profile {name} has no description")
+            for skill in resolve_profile(name):
+                if skill not in cat:
+                    errors.append(f"Profile {name} references unknown skill {skill}")
+        except ValueError as exc:
+            errors.append(str(exc))
+    if errors:
+        for error in errors:
+            print(f"ERROR: {error}", file=sys.stderr)
+        return 1
+    print(f"OK: {len(cat)} skills, {len(profile_files)} profiles")
+    return 0
+
+
+def command_bootstrap(args: argparse.Namespace) -> int:
+    global_names = ("project-workflow", "skill-hub")
+    destinations = {
+        "claude": Path.home() / ".claude" / "skills",
+        "codex": Path.home() / ".codex" / "skills",
+    }
+    conflicts: list[str] = []
+    for target, base in destinations.items():
+        for name in global_names:
+            src = GLOBAL_SKILLS_DIR / name
+            dst = base / name
+            if dst.exists() and tree_hash(dst) != tree_hash(src) and not args.force:
+                conflicts.append(f"{target}:{dst}")
+
+    preference_src = Path(args.preferences).expanduser().resolve() if args.preferences else None
+    preference_destinations = {
+        "claude-config": Path.home() / ".claude" / "CLAUDE.md",
+        "codex-config": Path.home() / ".codex" / "AGENTS.md",
+    }
+    if preference_src is not None:
+        if not preference_src.is_file():
+            raise ValueError(f"Preferences file does not exist: {preference_src}")
+        for target, dst in preference_destinations.items():
+            if dst.exists() and dst.read_bytes() != preference_src.read_bytes() and not args.force:
+                conflicts.append(f"{target}:{dst}")
+
+    link = Path.home() / ".local" / "bin" / "skillhub"
+    desired = HUB / "bin" / "skillhub"
+    if (link.exists() or link.is_symlink()) and link.resolve() != desired.resolve() and not args.force:
+        conflicts.append(f"command:{link}")
+
+    if conflicts:
+        raise ValueError("Refusing to overwrite differing global installation; use --force if intentional:\n  " + "\n  ".join(conflicts))
+
+    for base in destinations.values():
+        base.mkdir(parents=True, exist_ok=True)
+        for name in global_names:
+            src = GLOBAL_SKILLS_DIR / name
+            dst = base / name
+            if dst.exists():
+                shutil.rmtree(dst)
+            shutil.copytree(src, dst, symlinks=True)
+
+    if preference_src is not None:
+        for dst in preference_destinations.values():
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(preference_src, dst)
+
+    link.parent.mkdir(parents=True, exist_ok=True)
+    if link.exists() or link.is_symlink():
+        link.unlink()
+    link.symlink_to(desired)
+    print("Installed global routing skills for Claude Code and Codex")
+    if preference_src is not None:
+        print(f"Installed explicit user preferences from {preference_src}")
+    print(f"Command: {link} -> {desired}")
+    return 0
+
+
+def command_profiles(_: argparse.Namespace) -> int:
+    for path in sorted(PROFILES_DIR.glob("*.toml")):
+        data = load_toml(path)
+        print(f"{path.stem:22} {data.get('description', '')}")
+    return 0
+
+
+def command_show(args: argparse.Namespace) -> int:
+    data = load_profile(args.profile)
+    print(f"{args.profile}: {data.get('description', '')}")
+    for skill in resolve_profile(args.profile):
+        print(f"- {skill}")
+    return 0
+
+
+def command_detect(args: argparse.Namespace) -> int:
+    project = Path(args.project).expanduser().resolve()
+    facts, profiles = project_facts(project)
+    print("Facts: " + (", ".join(facts) if facts else "none detected"))
+    print("Base profiles: " + (", ".join(profiles) if profiles else "none detected"))
+    print("Add focused packs from product facts; do not infer optional capabilities without evidence.")
+    return 0
+
+
+def selected_skills(profile_names: list[str], explicit_skills: list[str]) -> list[str]:
+    cat = catalog()
+    selected: list[str] = []
+    for profile in profile_names:
+        selected.extend(resolve_profile(profile))
+    selected.extend(check_name(name) for name in explicit_skills)
+    selected = unique(selected)
+    unknown = [name for name in selected if name not in cat]
+    if unknown:
+        raise ValueError("Unknown skills: " + ", ".join(unknown))
+    return selected
+
+
+def ordered_targets(targets: list[str]) -> list[str]:
+    return [target for target in TARGET_DIRS if target in targets]
+
+
+def remove_path(path: Path) -> None:
+    if path.is_dir() and not path.is_symlink():
+        shutil.rmtree(path)
+    elif path.exists() or path.is_symlink():
+        path.unlink()
+
+
+def copy_skill(name: str, dst: Path) -> None:
+    src = SKILLS_DIR / name
+    symlinks = [p for p in src.rglob("*") if p.is_symlink()]
+    if symlinks:
+        raise ValueError(f"Refusing to install skill containing symlinks: {name}")
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    tmp = dst.with_name(f".{name}.skillhub-tmp")
+    remove_path(tmp)
+    shutil.copytree(src, tmp, symlinks=False)
+    remove_path(dst)
+    tmp.rename(dst)
+
+
+def apply_set(
+    project: Path,
+    profile_names: list[str],
+    explicit_skills: list[str],
+    targets: list[str],
+    *,
+    update: bool,
+    force: bool,
+) -> int:
+    """Bring project-local copies in line with the selection.
+
+    Ownership is tracked per (target, skill) with the hash of the copy skillhub wrote.
+    Without `update`, existing copies are never replaced: new skills are added and
+    deselected unmodified ones are removed. With `update` (sync), unmodified copies are
+    refreshed from the Hub. Locally modified or unmanaged copies are never overwritten
+    or deleted without `force`.
+    """
+    selected = selected_skills(profile_names, explicit_skills)
+    old = read_manifest(project)
+    old_items: dict[str, dict] = old.get("skills", {})
+    cat = catalog()
+    hub = {name: tree_hash(SKILLS_DIR / name) for name in selected}
+
+    copies: list[tuple[str, Path]] = []
+    removals: list[Path] = []
+    conflicts: list[str] = []
+    outdated: list[str] = []
+    modified: list[str] = []
+    refreshed: set[str] = set()
+    hashes: dict[str, dict[str, str]] = {name: {} for name in selected}
+    sources: dict[str, dict[str, str]] = {name: {} for name in selected}
+    revisions: dict[str, dict[str, str]] = {name: {} for name in selected}
+
+    def preserve_provenance(name: str, target: str) -> None:
+        previous = old_items.get(name, {})
+        sources[name][target] = previous.get("sources", {}).get(target, "unknown")
+        revisions[name][target] = previous.get("revisions", {}).get(target, "unknown")
+
+    def current_provenance(name: str, target: str) -> None:
+        sources[name][target] = str(cat[name].get("source", "unknown"))
+        revisions[name][target] = str(cat[name].get("revision", "unknown"))
+
+    for target in targets:
+        for name in selected:
+            dst = skill_dest(project, target, name)
+            recorded = old_items.get(name, {}).get("hashes", {}).get(target)
+            label = f"{target}:{dst}"
+            if not dst.exists():
+                copies.append((name, dst))
+            elif recorded is None:
+                if not force:
+                    conflicts.append(f"{label} (exists but is not managed by skillhub)")
+                    continue
+                copies.append((name, dst))
+            elif not dst.is_dir():
+                if not force:
+                    conflicts.append(f"{label} (not a directory)")
+                    continue
+                copies.append((name, dst))
+            else:
+                local = tree_hash(dst)
+                if local == hub[name]:
+                    hashes[name][target] = local
+                    current_provenance(name, target)
+                    continue
+                if local != recorded:
+                    if update and not force:
+                        conflicts.append(f"{label} (modified locally)")
+                        continue
+                    if not update:
+                        hashes[name][target] = recorded
+                        preserve_provenance(name, target)
+                        modified.append(label)
+                        continue
+                    copies.append((name, dst))
+                elif update:
+                    copies.append((name, dst))
+                else:
+                    hashes[name][target] = recorded
+                    preserve_provenance(name, target)
+                    outdated.append(label)
+                    continue
+            hashes[name][target] = hub[name]
+            current_provenance(name, target)
+            refreshed.add(name)
+
+    for name, item in old_items.items():
+        for target, recorded in item["hashes"].items():
+            if name in hashes and target in targets:
+                continue
+            dst = skill_dest(project, target, name)
+            if not dst.exists():
+                continue
+            if force or (dst.is_dir() and tree_hash(dst) == recorded):
+                removals.append(dst)
+            else:
+                conflicts.append(f"{target}:{dst} (modified locally, no longer selected)")
+
+    if conflicts:
+        raise ValueError(
+            "Refusing to overwrite or delete skills that skillhub did not write unchanged; "
+            "inspect them, or use --force if replacing them is intentional:\n  " + "\n  ".join(conflicts)
+        )
+
+    for path in removals:
+        remove_path(path)
+    for name, dst in copies:
+        copy_skill(name, dst)
+
+    if not selected:
+        (project / MANIFEST_NAME).unlink(missing_ok=True)
+        print(f"Removed {len(removals)} skill copies; no skills remain, {MANIFEST_NAME} deleted")
+        return 0
+
+    items: dict[str, dict] = {}
+    for name in selected:
+        items[name] = {"sources": sources[name], "revisions": revisions[name], "hashes": hashes[name]}
+    write_manifest(project, profile_names, explicit_skills, targets, items)
+
+    print(f"Skills: {len(selected)} in {', '.join(targets)}; copied {len(copies)}, removed {len(removals)}")
+    print("Profiles: " + (", ".join(profile_names) if profile_names else "none"))
+    if outdated:
+        print(f"Kept {len(outdated)} existing copies that are older than the Hub; run `skillhub sync` to update them.")
+    if modified:
+        print(f"Kept {len(modified)} locally modified copies unchanged:\n  " + "\n  ".join(modified))
+    if copies:
+        print(
+            "Note: a newly created skills directory may not be visible to an already running agent session. "
+            "Claude Code: run /reload-skills (or read the SKILL.md by path). Codex: restart if the skill does not appear."
+        )
+    return 0
+
+
+def project_path(raw: str, must_exist: bool = True) -> Path:
+    project = Path(raw).expanduser().resolve()
+    if must_exist and not project.is_dir():
+        raise ValueError(f"Project directory does not exist: {project}")
+    return project
+
+
+def require_manifest(project: Path) -> dict:
+    manifest = read_manifest(project)
+    if not manifest:
+        raise ValueError(f"No {MANIFEST_NAME} in {project}")
+    return manifest
+
+
+def command_install(args: argparse.Namespace) -> int:
+    project = project_path(args.project)
+    manifest = read_manifest(project)
+    profiles = unique(manifest.get("profiles", []) + list(args.profile))
+    explicit_skills = unique(manifest.get("explicit_skills", []) + list(args.skill))
+    requested = target_list(args.target) if args.target else ([] if manifest else target_list("both"))
+    targets = ordered_targets(manifest.get("targets", []) + requested)
+    if not profiles and not explicit_skills:
+        raise ValueError("No skills selected")
+    return apply_set(project, profiles, explicit_skills, targets, update=False, force=args.force)
+
+
+def command_sync(args: argparse.Namespace) -> int:
+    project = project_path(args.project)
+    manifest = require_manifest(project)
+    return apply_set(
+        project,
+        manifest["profiles"],
+        manifest["explicit_skills"],
+        manifest["targets"],
+        update=True,
+        force=args.force,
+    )
+
+
+def command_remove(args: argparse.Namespace) -> int:
+    project = project_path(args.project)
+    manifest = require_manifest(project)
+    if not (args.profile or args.skill or args.target):
+        raise ValueError("Nothing to remove: pass --profile, --skill, or --target")
+    for profile in args.profile:
+        if profile not in manifest["profiles"]:
+            raise ValueError(f"Profile is not installed: {profile}")
+    profiles = [p for p in manifest["profiles"] if p not in args.profile]
+    for skill in args.skill:
+        if skill not in manifest["explicit_skills"]:
+            raise ValueError(f"Skill was not installed explicitly: {skill}; remove the profile that provides it")
+    explicit_skills = [s for s in manifest["explicit_skills"] if s not in args.skill]
+    for skill in args.skill:
+        if skill in selected_skills(profiles, []):
+            print(f"Note: {skill} stays installed because a remaining profile includes it")
+    targets = [t for t in manifest["targets"] if t not in args.target]
+    if not targets:
+        profiles, explicit_skills = [], []
+    return apply_set(project, profiles, explicit_skills, targets, update=False, force=args.force)
+
+
+def command_status(args: argparse.Namespace) -> int:
+    project = project_path(args.project)
+    manifest = require_manifest(project)
+    items: dict[str, dict] = manifest["skills"]
+    cat = catalog()
+    missing_profiles = [p for p in manifest["profiles"] if not (PROFILES_DIR / f"{p}.toml").is_file()]
+    if missing_profiles:
+        print("Profiles no longer in the Hub: " + ", ".join(missing_profiles))
+    desired = selected_skills(
+        [p for p in manifest["profiles"] if p not in missing_profiles],
+        [s for s in manifest["explicit_skills"] if s in cat],
+    )
+    bad = bool(missing_profiles)
+    for name in unique(desired + list(items)):
+        if name not in items:
+            print(f"{name:32} not installed (added to a profile in the Hub)")
+            bad = True
+            continue
+        if name not in desired:
+            print(f"{name:32} installed but no longer selected (removed from its profile or the Hub)")
+            bad = True
+            continue
+        hub_hash = tree_hash(SKILLS_DIR / name)
+        states: list[str] = []
+        for target in manifest["targets"]:
+            recorded = items[name]["hashes"].get(target)
+            dst = skill_dest(project, target, name)
+            if recorded is None:
+                state = "not-installed"
+            elif not dst.is_dir():
+                state = "missing"
+            elif tree_hash(dst) != recorded:
+                state = "modified-locally"
+            elif recorded != hub_hash:
+                state = "outdated"
+            else:
+                state = "current"
+            bad = bad or state != "current"
+            states.append(f"{target}={state}")
+        print(f"{name:32} " + ", ".join(states))
+    if bad:
+        print(
+            "Run `skillhub sync` to apply Hub changes; it refuses to overwrite modified-locally copies "
+            "unless --force is given."
+        )
+    return 1 if bad else 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Install curated project-local agent skills from this Skill Hub checkout.")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p = sub.add_parser("verify", help="Validate the hub catalog and profiles.")
+    p.set_defaults(func=command_verify)
+
+    p = sub.add_parser("bootstrap", help="Install the minimal global routing skills and skillhub command for this checkout.")
+    p.add_argument("--preferences", help="Optional explicit file to copy to ~/.claude/CLAUDE.md and ~/.codex/AGENTS.md.")
+    p.add_argument("--force", action="store_true")
+    p.set_defaults(func=command_bootstrap)
+
+    p = sub.add_parser("profiles", help="List available profiles.")
+    p.set_defaults(func=command_profiles)
+
+    p = sub.add_parser("show", help="Show the skills resolved by a profile.")
+    p.add_argument("profile")
+    p.set_defaults(func=command_show)
+
+    p = sub.add_parser("detect", help="Detect objective project facts and base profiles.")
+    p.add_argument("project", nargs="?", default=".")
+    p.set_defaults(func=command_detect)
+
+    p = sub.add_parser("install", help="Add profiles/skills to a project; existing copies are never replaced.")
+    p.add_argument("--project", default=".")
+    p.add_argument("--profile", action="append", default=[])
+    p.add_argument("--skill", action="append", default=[])
+    p.add_argument("--target", choices=("both", "claude", "codex"),
+                   help="Agents to install for (added to the recorded targets; default: both for a new project).")
+    p.add_argument("--force", action="store_true")
+    p.set_defaults(func=command_install)
+
+    p = sub.add_parser("remove", help="Remove profiles, explicit skills, or targets from a project.")
+    p.add_argument("--project", default=".")
+    p.add_argument("--profile", action="append", default=[])
+    p.add_argument("--skill", action="append", default=[])
+    p.add_argument("--target", action="append", default=[], choices=tuple(TARGET_DIRS))
+    p.add_argument("--force", action="store_true")
+    p.set_defaults(func=command_remove)
+
+    p = sub.add_parser("sync", help="Update unmodified managed copies to the current Hub selection and content.")
+    p.add_argument("project", nargs="?", default=".")
+    p.add_argument("--force", action="store_true")
+    p.set_defaults(func=command_sync)
+
+    p = sub.add_parser("status", help="Report missing, outdated, locally modified, and added/removed skills.")
+    p.add_argument("project", nargs="?", default=".")
+    p.set_defaults(func=command_status)
+
+    return parser
+
+
+def main() -> int:
+    try:
+        args = build_parser().parse_args()
+        return args.func(args)
+    except (ValueError, OSError, tomllib.TOMLDecodeError) as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,3 @@
+name = "game-genre-survival-crafting"
+description = "Genre glue for survival-crafting games; compose with the relevant engine and discipline profiles."
+skills = ["survival-crafting"]

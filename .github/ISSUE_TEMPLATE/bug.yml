@@ -1,0 +1,26 @@
+name: Bug report
+description: Report incorrect installer, profile, detection, or skill behavior
+title: "[bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include the command, expected behavior, and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Did this overwrite/delete files or affect unmanaged content?
+      description: If yes, stop reproducing on valuable data and describe the impact.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, Claude Code/Codex version, and relevant profile(s).
+    validations:
+      required: true

@@ -1,0 +1,3 @@
+name = "game-genre-tower-defense"
+description = "Genre glue for tower-defense games; compose with the relevant engine and discipline profiles."
+skills = ["tower-defense"]

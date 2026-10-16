@@ -1,0 +1,3 @@
+name = "game-ai"
+description = "NPC/game AI including state machines, behavior trees, and utility AI."
+skills = ["game-ai", "ai-behavior-trees-utility-ai"]

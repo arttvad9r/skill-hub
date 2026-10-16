@@ -1,0 +1,3 @@
+name = "android-security"
+description = "Android intent, permission, and IPC security."
+skills = ["android-intent-security", "android-permissions-security"]

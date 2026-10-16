@@ -1,0 +1,3 @@
+name = "android-compose-migration"
+description = "Migration from XML Views to Jetpack Compose."
+skills = ["migrate-xml-views-to-jetpack-compose"]

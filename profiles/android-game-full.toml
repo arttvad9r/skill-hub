@@ -1,0 +1,4 @@
+name = "android-game-full"
+description = "Android application stack plus the complete curated engine-neutral game skill set."
+extends = ["android-app", "game-full"]
+skills = []

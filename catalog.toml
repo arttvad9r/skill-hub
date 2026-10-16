@@ -1,0 +1,784 @@
+version = 1
+
+[skills.adaptive]
+category = "android-ui"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.android-cli]
+category = "android-tooling"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.android-emu]
+category = "android-tooling"
+source = "local"
+revision = "imported-2026-10-16"
+source_url = "local"
+license = "Apache-2.0"
+license_file = "LICENSE"
+
+[skills.android-intent-security]
+category = "android-security"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.android-permissions-security]
+category = "android-security"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.android-profiler]
+category = "android-performance"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.edge-to-edge]
+category = "android-ui"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.navigation-3]
+category = "android-navigation"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.navigation-event]
+category = "android-navigation"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.r8-analyzer]
+category = "android-performance"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.styles]
+category = "android-ui"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.testing-setup]
+category = "android-testing"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.ai-behavior-trees-utility-ai]
+category = "game-ai"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.audio-design]
+category = "game-action"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.camera-systems]
+category = "game-action"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.create-game-assets]
+category = "game-art"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.dialogue-systems]
+category = "game-narrative"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.game-ai]
+category = "game-ai"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.game-feel]
+category = "game-action"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.game-ui-ux]
+category = "game-core"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.input-systems]
+category = "game-core"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.level-design]
+category = "game-levels"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.performance-optimization]
+category = "game-core"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.physics-tuning]
+category = "game-action"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.procedural-gen]
+category = "game-procedural"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.save-systems]
+category = "game-narrative"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.shader-programming]
+category = "game-art"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.ui-ux-pro-max]
+category = "design"
+source = "ui-ux-pro-max"
+revision = "56ea9cf174ed86786187daa9de0e6247cb0747e4"
+source_url = "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+license = "MIT"
+license_file = "sources/ui-ux-pro-max/LICENSE"
+
+[skills.impeccable]
+category = "design-core"
+source = "impeccable"
+revision = "5bf0a069dc857e1b5f4b090e004d9d5b231416ca"
+source_url = "https://github.com/pbakaus/impeccable"
+license = "Apache-2.0"
+license_file = "sources/impeccable/LICENSE"
+
+[skills.baseline-ui]
+category = "design-ui"
+source = "ui-skills"
+revision = "fdd6c09dd866354a627ddf3fa46b7b01d421176d"
+source_url = "https://github.com/ibelick/ui-skills"
+license = "MIT"
+license_file = "sources/ui-skills/LICENSE"
+
+[skills.component-canvas]
+category = "design-ui"
+source = "ui-skills"
+revision = "fdd6c09dd866354a627ddf3fa46b7b01d421176d"
+source_url = "https://github.com/ibelick/ui-skills"
+license = "MIT"
+license_file = "sources/ui-skills/LICENSE"
+
+[skills.create-design-md]
+category = "design-ui"
+source = "ui-skills"
+revision = "fdd6c09dd866354a627ddf3fa46b7b01d421176d"
+source_url = "https://github.com/ibelick/ui-skills"
+license = "MIT"
+license_file = "sources/ui-skills/LICENSE"
+
+[skills.fixing-accessibility]
+category = "design-ui"
+source = "ui-skills"
+revision = "fdd6c09dd866354a627ddf3fa46b7b01d421176d"
+source_url = "https://github.com/ibelick/ui-skills"
+license = "MIT"
+license_file = "sources/ui-skills/LICENSE"
+
+[skills.fixing-metadata]
+category = "design-ui"
+source = "ui-skills"
+revision = "fdd6c09dd866354a627ddf3fa46b7b01d421176d"
+source_url = "https://github.com/ibelick/ui-skills"
+license = "MIT"
+license_file = "sources/ui-skills/LICENSE"
+
+[skills.fixing-motion-performance]
+category = "design-ui"
+source = "ui-skills"
+revision = "fdd6c09dd866354a627ddf3fa46b7b01d421176d"
+source_url = "https://github.com/ibelick/ui-skills"
+license = "MIT"
+license_file = "sources/ui-skills/LICENSE"
+
+[skills.improve-ui]
+category = "design-ui"
+source = "ui-skills"
+revision = "fdd6c09dd866354a627ddf3fa46b7b01d421176d"
+source_url = "https://github.com/ibelick/ui-skills"
+license = "MIT"
+license_file = "sources/ui-skills/LICENSE"
+
+[skills.web-design-guidelines]
+category = "design-web-audit"
+source = "local"
+revision = "public-wrapper-2026-10-16"
+source_url = "https://github.com/vercel-labs/web-interface-guidelines"
+license = "Apache-2.0"
+license_file = "LICENSE"
+[skills.gpt-taste]
+category = "design-expressive"
+source = "taste-skill"
+revision = "f624f37a8c650b9cc550253104925efe4c8de246"
+source_url = "https://github.com/Leonxlnx/taste-skill"
+license = "MIT"
+license_file = "sources/taste-skill/LICENSE"
+
+[skills.agp-9-upgrade]
+category = "android-build-system"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.android-for-cars-parked-apps]
+category = "android-cars"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.appfunctions]
+category = "android-device-ai"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.camerax]
+category = "android-camera"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.display-glasses-with-jetpack-compose-glimmer]
+category = "android-xr"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.engage-sdk-integration]
+category = "android-play"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.glance-canonical-layouts]
+category = "android-system"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.jetpack-compose-performance]
+category = "android-jetpack-compose"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.leanback-to-compose-tv-migration]
+category = "android-tv"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.litert-runtime]
+category = "android-device-ai"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.media3-cast-integration]
+category = "android-media"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.migrate-xml-views-to-jetpack-compose]
+category = "android-jetpack-compose"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.ml-kit-genai-prompt-api]
+category = "android-device-ai"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.play-billing-library-version-upgrade]
+category = "android-play"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.play-policy-insights]
+category = "android-play"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.restore-credentials]
+category = "android-identity"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.verified-email]
+category = "android-identity"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.wear-compose-m3]
+category = "android-wear"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.wear-widgets]
+category = "android-wear"
+source = "android-skills"
+revision = "5bda39f154fb859a08d45e2392f3568e049f83fb"
+source_url = "https://github.com/android/skills"
+license = "Apache-2.0"
+license_file = "sources/android-skills/LICENSE.txt"
+
+[skills.card-game]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.fps-shooter]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.platformer]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.puzzle]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.roguelike]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.rpg]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.survival-crafting]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.tower-defense]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.visual-novel]
+category = "game-genre"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.game-jam]
+category = "game-workflow"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.itch-publish]
+category = "game-workflow"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.prototype-fast]
+category = "game-workflow"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.steam-publish]
+category = "game-workflow"
+source = "gamedev-skills"
+revision = "0a70cfc64672d512c5b5b6006b5dcb5cf90dbdbd"
+source_url = "https://github.com/gamedev-skills/awesome-gamedev-agent-skills"
+license = "Apache-2.0"
+license_file = "sources/gamedev-skills/LICENSE"
+
+[skills.accessible-forms]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.input-validation-a11y]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.a11y-principles]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.wcag-2-2-for-mobile]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.keyboard-and-hardware-input]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.switch-and-voice-control]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.touch-targets]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.rtl-support]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.animation-accessibility]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.reduce-motion]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.focus-order]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.modal-accessibility]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.semantics-labels]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.talkback]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.voiceover]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.automated-a11y-tools]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.manual-a11y-audit]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.contrast-and-color]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.dark-mode-a11y]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.dynamic-type-scaling]
+category = "mobile-accessibility"
+source = "mobile-accessibility"
+revision = "c39121f6e8222197f94e9f4de2440ea01af4aa39"
+source_url = "https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills"
+license = "CC-BY-4.0 docs / MIT code"
+license_file = "sources/mobile-accessibility/LICENSE"
+
+[skills.code-security]
+category = "security"
+source = "local"
+revision = "hub-v0.3.0"
+source_url = "local"
+license = "Apache-2.0"
+license_file = "LICENSE"
+
+[skills.semgrep]
+category = "security"
+source = "local"
+revision = "hub-v0.3.0"
+source_url = "local"
+license = "Apache-2.0"
+license_file = "LICENSE"
+
+[skills.llm-security]
+category = "security"
+source = "local"
+revision = "hub-v0.3.0"
+source_url = "local"
+license = "Apache-2.0"
+license_file = "LICENSE"
+
+[skills.docker-project-foundations]
+category = "docker"
+source = "docker-skills"
+revision = "8afc2c6ef4e0ec2ea8e4ba024d0b884ea930b926"
+source_url = "https://github.com/docker/skills/tree/v0.3.1"
+license = "Apache-2.0"
+license_file = "sources/docker-skills/LICENSE"
+
+[skills.docker-build-strategies]
+category = "docker"
+source = "docker-skills"
+revision = "8afc2c6ef4e0ec2ea8e4ba024d0b884ea930b926"
+source_url = "https://github.com/docker/skills/tree/v0.3.1"
+license = "Apache-2.0"
+license_file = "sources/docker-skills/LICENSE"
+
+[skills.docker-compose-patterns]
+category = "docker"
+source = "docker-skills"
+revision = "8afc2c6ef4e0ec2ea8e4ba024d0b884ea930b926"
+source_url = "https://github.com/docker/skills/tree/v0.3.1"
+license = "Apache-2.0"
+license_file = "sources/docker-skills/LICENSE"
+
+[skills.docker-destructive-guardrails]
+category = "docker"
+source = "docker-skills"
+revision = "8afc2c6ef4e0ec2ea8e4ba024d0b884ea930b926"
+source_url = "https://github.com/docker/skills/tree/v0.3.1"
+license = "Apache-2.0"
+license_file = "sources/docker-skills/LICENSE"
+
+[skills.fastapi]
+category = "python-fastapi"
+source = "fastapi"
+revision = "0b919816378eaa773df7ce4204414c712c9fdbea"
+source_url = "https://github.com/fastapi/fastapi"
+license = "MIT"
+license_file = "sources/fastapi/LICENSE"

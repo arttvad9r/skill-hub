@@ -1,0 +1,3 @@
+name = "android-performance"
+description = "Android profiling, shrinking, and R8 analysis."
+skills = ["android-profiler", "r8-analyzer"]

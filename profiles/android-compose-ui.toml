@@ -1,0 +1,3 @@
+name = "android-compose-ui"
+description = "Compose UI adaptation and edge-to-edge behavior."
+skills = ["edge-to-edge", "adaptive"]

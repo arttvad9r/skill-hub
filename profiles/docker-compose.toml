@@ -1,0 +1,4 @@
+name = "docker-compose"
+description = "Docker Compose service wiring, health checks, dependency ordering, volumes, networks, and development overrides."
+extends = ["docker-safety"]
+skills = ["docker-compose-patterns"]

@@ -1,0 +1,3 @@
+name = "game-genre-visual-novel"
+description = "Genre glue for visual-novel games; compose with the relevant engine and discipline profiles."
+skills = ["visual-novel"]

@@ -1,0 +1,3 @@
+name = "game-action"
+description = "Real-time game feel, camera, physics tuning, and audio feedback."
+skills = ["game-feel", "camera-systems", "physics-tuning", "audio-design"]

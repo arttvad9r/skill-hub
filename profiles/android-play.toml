@@ -1,0 +1,3 @@
+name = "android-play"
+description = "Google Play integration, billing upgrade, engagement, and policy insights."
+skills = ["engage-sdk-integration", "play-billing-library-version-upgrade", "play-policy-insights"]

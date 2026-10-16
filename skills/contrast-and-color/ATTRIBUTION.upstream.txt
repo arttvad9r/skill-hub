@@ -1,0 +1,3 @@
+Portions from Awesome Mobile Accessibility Agent Skills
+https://github.com/almasumdev/awesome-mobile-accessibility-agent-skills
+Documentation: CC BY 4.0; code/snippets: MIT.

@@ -1,0 +1,3 @@
+name = "security-llm"
+description = "OWASP-aligned security guidance for LLM, RAG, tool-using, and agentic applications."
+skills = ["llm-security"]

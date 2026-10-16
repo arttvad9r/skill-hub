@@ -1,0 +1,3 @@
+name = "security-scan"
+description = "Semgrep static-analysis workflow and custom rule guidance."
+skills = ["semgrep"]

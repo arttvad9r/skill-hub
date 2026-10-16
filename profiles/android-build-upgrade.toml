@@ -1,0 +1,3 @@
+name = "android-build-upgrade"
+description = "Android Gradle Plugin major-version migration guidance."
+skills = ["agp-9-upgrade"]

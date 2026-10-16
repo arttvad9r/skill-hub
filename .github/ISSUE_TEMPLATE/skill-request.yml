@@ -1,0 +1,24 @@
+name: Skill or profile request
+description: Propose a capability gap for the curated Hub
+title: "[skill] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: gap
+    attributes:
+      label: Capability gap
+      description: What task repeatedly performs poorly without specialized guidance?
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Candidate source
+      description: Maintained upstream repository/docs and license, if one exists.
+  - type: textarea
+    id: trigger
+    attributes:
+      label: Trigger and profile
+      description: When should this skill be available, and which projects should not receive it?
+    validations:
+      required: true

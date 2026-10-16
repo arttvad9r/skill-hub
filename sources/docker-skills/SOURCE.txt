@@ -1,0 +1,4 @@
+source=https://github.com/docker/skills
+release=v0.3.1
+revision=8afc2c6ef4e0ec2ea8e4ba024d0b884ea930b926
+imported=2026-10-16

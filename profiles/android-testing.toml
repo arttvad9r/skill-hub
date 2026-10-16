@@ -1,0 +1,3 @@
+name = "android-testing"
+description = "Android test infrastructure and testing strategy."
+skills = ["testing-setup"]

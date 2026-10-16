@@ -1,0 +1,3 @@
+name = "game-workflow-steam-publish"
+description = "Game-development workflow guidance for steam-publish."
+skills = ["steam-publish"]

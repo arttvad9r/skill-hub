@@ -1,0 +1,3 @@
+name = "android-accessibility"
+description = "Android-focused mobile accessibility without the iOS VoiceOver-specific skill."
+skills = ["a11y-principles", "wcag-2-2-for-mobile", "semantics-labels", "talkback", "focus-order", "modal-accessibility", "keyboard-and-hardware-input", "switch-and-voice-control", "touch-targets", "animation-accessibility", "reduce-motion", "contrast-and-color", "dark-mode-a11y", "dynamic-type-scaling", "accessible-forms", "input-validation-a11y", "rtl-support", "automated-a11y-tools", "manual-a11y-audit"]

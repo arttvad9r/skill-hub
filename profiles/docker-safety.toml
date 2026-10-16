@@ -1,0 +1,3 @@
+name = "docker-safety"
+description = "Docker destructive-operation guardrails for projects that manipulate container state."
+skills = ["docker-destructive-guardrails"]
