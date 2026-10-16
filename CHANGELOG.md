@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — public launch candidate
+## v0.4.0 — 2026-10-16 — Public launch
 
 - Make bootstrap safe for public use: personal preferences are opt-in via `--preferences`.
 - Add Apache-2.0 licensing for original Skill Hub material.
