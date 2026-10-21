@@ -12,5 +12,11 @@ Run: `<verified command or unknown>`
 ## Context
 - Read `<path>` before changing <area>.
 
+## Verification
+- <critical outcome> → <test/command/scenario that proves it>
+
+## Regression guards
+- <known risky behavior> → <test/eval or durable verification pointer>
+
 ## Git
 - <branch model actually chosen for this project>

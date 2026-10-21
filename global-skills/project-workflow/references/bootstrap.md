@@ -38,6 +38,10 @@ For a genuinely complex or long-lived system, increase the process budget only a
 
 Do not create `ARCHITECTURE.md`, glossary, roadmap, changelog, session logs, ADR folders, specs, research notes, dependency graphs, or plans merely because a template allows them.
 
+Before calling bootstrap complete, make four things cheaply discoverable from existing project docs/instructions: what the product is for, where the important code/boundaries live when non-obvious, the verified build/run/test commands, and how important user-visible behavior is proven. Reuse existing documents instead of creating duplicate files.
+
+If a project has known regression-prone flows, prefer executable tests/evals as the durable record. For a critical flow that cannot reasonably be automated, keep a short verification pointer/checklist in the most relevant existing document rather than a global reminder.
+
 ## 5. Repository hygiene
 
 Check that ignore rules cover generated output, local IDE/cache files, credentials, `.env`, signing material, and platform-specific build artifacts. Add `.env.example` only when environment variables are genuinely required and ensure it contains no secrets.
@@ -82,6 +86,12 @@ Run: `<verified command>`
 
 ## Context
 - Read `<path>` before changing <area>.
+
+## Verification
+- <critical outcome or user flow> → <test/command/scenario that proves it>
+
+## Regression guards
+- <known risky behavior> → <test/eval or durable verification pointer>
 
 ## Git
 - <chosen branch model>

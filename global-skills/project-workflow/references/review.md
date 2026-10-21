@@ -15,7 +15,15 @@ Keep these questions distinct so one cannot hide the other:
 
 For a large diff, independent read-only passes or subagents can review these axes in parallel. For a small diff, review directly. Never let multiple agents edit the same working tree concurrently.
 
-## 3. Verify findings
+## 3. Use fresh context when it materially helps
+
+For medium/high-risk changes, repeated failed fixes, or substantial uncertainty, prefer an independent reviewer with fresh context when one is available and the extra cost is justified. Give the reviewer the intended outcome, acceptance criteria, changed surface, and verification evidence; avoid priming them with the implementer's defense of the approach.
+
+Keep this pass read-only. Verify findings before acting on them. Do not spend an independent review on trivial low-risk edits.
+
+After roughly two or three meaningful review/fix cycles, persistent serious findings are a signal to reconsider the approach or assumptions rather than continuing an endless patch loop.
+
+## 4. Verify findings
 
 Trace each potential issue to concrete code and, when practical, reproduce it with a focused test, build, static check, or executable scenario. Do not report hypothetical style preferences as defects.
 
@@ -26,6 +34,6 @@ Prioritize findings by user impact and risk:
 - **Medium:** meaningful edge-case, maintainability, performance, or reliability problem.
 - **Low:** worthwhile cleanup that does not materially affect correctness.
 
-## 4. Report findings first
+## 5. Report findings first
 
 For each finding, give the severity, location, concrete failure/risk, and the smallest credible correction. If no material finding exists, say so and state what was actually checked and what remains unverified.

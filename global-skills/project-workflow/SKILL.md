@@ -29,11 +29,12 @@ Do not force this workflow onto a small, obvious edit.
 4. Research current authoritative documentation when a technical choice may have changed or materially affects the design.
 5. Keep durable project context in the repository, not only in chat. Keep temporary process documents temporary.
 6. Prefer context pointers over duplicated instructions in `AGENTS.md` or `CLAUDE.md`.
-7. Verify changed behavior with evidence before claiming completion.
-8. Record only significant architectural decisions as ADRs; routine choices do not need one.
-9. Do not turn process templates into mandatory bureaucracy; adapt or skip them when the project is simpler.
-10. Installing a specialist skill makes it available; it does not make every installed skill mandatory for every task. Load a skill body only when its trigger matches the work.
-11. Keep one writer per working tree. Use parallel agents only for independent read-only investigation/review or isolated worktrees with non-overlapping ownership.
+7. For non-trivial work, define the intended outcome and the evidence that would prove it before implementation. Prefer direct evidence of the requested behavior over proxy evidence such as compilation alone.
+8. Scale verification and review to risk: low-risk mechanical edits need lightweight checks; medium-risk features, bugs, and UX flows need realistic behavior verification; high-risk auth, security, data, architecture, or release work needs deeper evidence and independent review when available.
+9. Record only significant architectural decisions as ADRs; routine choices do not need one.
+10. Do not turn process templates into mandatory bureaucracy; adapt or skip them when the project is simpler.
+11. Installing a specialist skill makes it available; it does not make every installed skill mandatory for every task. Load a skill body only when its trigger matches the work.
+12. Keep one writer per working tree. Use parallel agents only for independent read-only investigation/review or isolated worktrees with non-overlapping ownership.
 ## Discover and design
 
 For a substantial new idea or materially ambiguous change, establish the real problem, intended user, success criteria, scope, constraints, and important unknowns before choosing architecture. Reuse decisions already present in the conversation or repository. Ask only about unresolved product choices that materially change the result.
@@ -67,7 +68,7 @@ Read `references/spec-and-plan.md` for substantial specifications or plans.
 
 Read the relevant requirements and current plan, then compare them with actual code and recent history so finished work is not repeated. Treat the plan as a guide, not a transcript. Technical changes within agreed behavior may update the plan; product or scope changes must remain explicit. Prefer focused changes and reuse existing code. Avoid speculative abstractions and unrelated cleanup.
 
-A plan step is complete only after its corresponding verification succeeds. When behavior has a cheap stable seam, prefer a focused failing/regression test before or alongside the implementation; do not force test-first ceremony where the test would be more expensive or brittle than the behavior.
+A plan step is complete only after its corresponding verification succeeds. For non-trivial steps, decide what observation would prove the outcome before implementing it. When behavior has a cheap stable seam, prefer a focused failing/regression test before or alongside the implementation; do not force test-first ceremony where the test would be more expensive or brittle than the behavior.
 
 ## Debug
 
@@ -77,7 +78,7 @@ Read `references/debugging.md` for investigation-heavy bugs, regressions, flaky 
 
 ## Review
 
-Review intent/spec correctness separately from engineering quality so one cannot mask the other. Verify material findings against concrete code or executable evidence. Do not modify the reviewed change unless the user asks for fixes.
+Review intent/spec correctness separately from engineering quality so one cannot mask the other. Verify material findings against concrete code or executable evidence. For medium/high-risk work, repeated failed fixes, or material uncertainty, prefer a fresh-context independent review when an appropriate reviewer is available; keep it read-only until findings are verified. Do not modify the reviewed change unless the user asks for fixes.
 
 Read `references/review.md` for branch, PR, working-tree, or implementation reviews.
 

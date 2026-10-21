@@ -46,7 +46,7 @@ For each meaningful step include:
 - requirement IDs covered when present;
 - verified files/components or clearly marked proposed additions;
 - dependency on earlier steps if any;
-- concrete verification and expected result.
+- concrete verification, the expected result, and why that evidence is strong enough to prove the outcome.
 
 Use a reproducing/failing test first for bug fixes and testable behavior where the codebase has a suitable test seam. Otherwise use the strongest relevant check without forcing TDD ceremony.
 
@@ -60,7 +60,7 @@ If the repository already uses an issue tracker and the work spans multiple inde
 
 Before execution verify:
 
-- every requirement is covered by at least one step and one check;
+- every requirement is covered by at least one step and one check that actually proves the requested outcome rather than only a proxy;
 - no step expands scope without a requirement;
 - dependencies and interfaces are internally consistent;
 - important failure states are covered;
