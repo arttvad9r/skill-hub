@@ -1,0 +1,4 @@
+name = "motion-math"
+description = "Programmatic mathematical and technical explanation videos with Manim."
+extends = ["motion-core"]
+skills = ["manim"]

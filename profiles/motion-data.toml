@@ -1,0 +1,4 @@
+name = "motion-data"
+description = "Data-driven charts, animated infographics, and presentation-style videos with deterministic visual verification."
+extends = ["motion-core"]
+skills = ["remotion-production", "animated-infographic", "chart-animation", "presentation-video"]

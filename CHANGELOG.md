@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add a curated motion stack with original production routing, UI animation craft/review, Remotion reference integration, reusable video workflows, data motion, WebGL, and Manim profiles.
 - Refactor `project-workflow` into a smaller progressive-disclosure router with explicit implementation and repository-audit modes.
 - Add impact-surface mapping, reuse-before-write, smallest-complete-change guidance, concrete review findings, risk-triggered regression checks, and optional documented `shortcut:` limits.
 

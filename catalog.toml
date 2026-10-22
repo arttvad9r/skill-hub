@@ -782,3 +782,163 @@ revision = "0b919816378eaa773df7ce4204414c712c9fdbea"
 source_url = "https://github.com/fastapi/fastapi"
 license = "MIT"
 license_file = "sources/fastapi/LICENSE"
+
+[skills.motion-production]
+category = "motion-core"
+source = "local"
+revision = "original-2026-10-22"
+source_url = "local"
+license = "Apache-2.0"
+license_file = "LICENSE"
+
+[skills.remotion-production]
+category = "motion-video"
+source = "local"
+revision = "public-wrapper-2026-10-22"
+source_url = "https://github.com/remotion-dev/skills"
+license = "Apache-2.0"
+license_file = "LICENSE"
+
+[skills.animate]
+category = "motion-ui"
+source = "emil-skills"
+revision = "2d228630ba1446365f614a108cb8252f1feda202"
+source_url = "https://github.com/emilkowalski/skills"
+license = "MIT"
+license_file = "sources/emil-skills/LICENSE"
+
+[skills.review-animations]
+category = "motion-ui"
+source = "emil-skills"
+revision = "2d228630ba1446365f614a108cb8252f1feda202"
+source_url = "https://github.com/emilkowalski/skills"
+license = "MIT"
+license_file = "sources/emil-skills/LICENSE"
+
+[skills.improve-animations]
+category = "motion-ui"
+source = "emil-skills"
+revision = "2d228630ba1446365f614a108cb8252f1feda202"
+source_url = "https://github.com/emilkowalski/skills"
+license = "MIT"
+license_file = "sources/emil-skills/LICENSE"
+
+[skills.find-animation-opportunities]
+category = "motion-ui"
+source = "emil-skills"
+revision = "2d228630ba1446365f614a108cb8252f1feda202"
+source_url = "https://github.com/emilkowalski/skills"
+license = "MIT"
+license_file = "sources/emil-skills/LICENSE"
+
+[skills.snapcn]
+category = "motion-video"
+source = "snapcn"
+revision = "d40a279cb358c2b76163c516650f5ea181d8dd1a"
+source_url = "https://github.com/snapcndev/snapcn"
+license = "MIT"
+license_file = "sources/snapcn/LICENSE"
+
+[skills.remotion-product-demo]
+category = "motion-video-product"
+source = "snapcn"
+revision = "d40a279cb358c2b76163c516650f5ea181d8dd1a"
+source_url = "https://github.com/snapcndev/snapcn"
+license = "MIT"
+license_file = "sources/snapcn/LICENSE"
+
+[skills.remotion-launch-video]
+category = "motion-video-product"
+source = "snapcn"
+revision = "d40a279cb358c2b76163c516650f5ea181d8dd1a"
+source_url = "https://github.com/snapcndev/snapcn"
+license = "MIT"
+license_file = "sources/snapcn/LICENSE"
+
+[skills.remotion-motion-graphics]
+category = "motion-video-graphics"
+source = "snapcn"
+revision = "d40a279cb358c2b76163c516650f5ea181d8dd1a"
+source_url = "https://github.com/snapcndev/snapcn"
+license = "MIT"
+license_file = "sources/snapcn/LICENSE"
+
+[skills.remotion-kinetic-typography]
+category = "motion-video-graphics"
+source = "snapcn"
+revision = "d40a279cb358c2b76163c516650f5ea181d8dd1a"
+source_url = "https://github.com/snapcndev/snapcn"
+license = "MIT"
+license_file = "sources/snapcn/LICENSE"
+
+[skills.remotion-logo-animation]
+category = "motion-video-graphics"
+source = "snapcn"
+revision = "d40a279cb358c2b76163c516650f5ea181d8dd1a"
+source_url = "https://github.com/snapcndev/snapcn"
+license = "MIT"
+license_file = "sources/snapcn/LICENSE"
+
+[skills.remotion-explainer-video]
+category = "motion-video-graphics"
+source = "snapcn"
+revision = "d40a279cb358c2b76163c516650f5ea181d8dd1a"
+source_url = "https://github.com/snapcndev/snapcn"
+license = "MIT"
+license_file = "sources/snapcn/LICENSE"
+
+[skills.animated-infographic]
+category = "motion-data"
+source = "iart-data-animation"
+revision = "8ce2709c3992490251e8a991535b1945f01c6865"
+source_url = "https://github.com/iart-ai/data-animation-skills"
+license = "MIT"
+license_file = "sources/iart-data-animation/LICENSE"
+
+[skills.chart-animation]
+category = "motion-data"
+source = "iart-data-animation"
+revision = "8ce2709c3992490251e8a991535b1945f01c6865"
+source_url = "https://github.com/iart-ai/data-animation-skills"
+license = "MIT"
+license_file = "sources/iart-data-animation/LICENSE"
+
+[skills.presentation-video]
+category = "motion-data"
+source = "iart-data-animation"
+revision = "8ce2709c3992490251e8a991535b1945f01c6865"
+source_url = "https://github.com/iart-ai/data-animation-skills"
+license = "MIT"
+license_file = "sources/iart-data-animation/LICENSE"
+
+[skills.threejs-animation]
+category = "motion-webgl"
+source = "iart-webgl-animation"
+revision = "50697d659fbf70152f48f9f8aadf1efe78bbdde1"
+source_url = "https://github.com/iart-ai/webgl-animation-skills"
+license = "MIT"
+license_file = "sources/iart-webgl-animation/LICENSE"
+
+[skills.shader-glsl]
+category = "motion-webgl"
+source = "iart-webgl-animation"
+revision = "50697d659fbf70152f48f9f8aadf1efe78bbdde1"
+source_url = "https://github.com/iart-ai/webgl-animation-skills"
+license = "MIT"
+license_file = "sources/iart-webgl-animation/LICENSE"
+
+[skills.particle-system]
+category = "motion-webgl"
+source = "iart-webgl-animation"
+revision = "50697d659fbf70152f48f9f8aadf1efe78bbdde1"
+source_url = "https://github.com/iart-ai/webgl-animation-skills"
+license = "MIT"
+license_file = "sources/iart-webgl-animation/LICENSE"
+
+[skills.manim]
+category = "motion-math"
+source = "iart-manim"
+revision = "a15833c44de5108a3ee68f178a1fca126aa7c6d8"
+source_url = "https://github.com/iart-ai/manim-skills"
+license = "MIT"
+license_file = "sources/iart-manim/LICENSE"

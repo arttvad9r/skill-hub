@@ -1,0 +1,4 @@
+name = "motion-video-product"
+description = "Product demos and launch films built on the core Remotion video stack."
+extends = ["motion-video"]
+skills = ["remotion-product-demo", "remotion-launch-video"]

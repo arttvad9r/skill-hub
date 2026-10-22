@@ -1,0 +1,4 @@
+name = "motion-webgl"
+description = "Real-time Three.js motion, GLSL shaders, and particle systems with deterministic visual checks and GPU hygiene."
+extends = ["motion-core"]
+skills = ["threejs-animation", "shader-glsl", "particle-system"]

@@ -27,7 +27,9 @@ def run(*args: str, cwd: Path | None = None, check: bool = True) -> subprocess.C
 class SkillHubTests(unittest.TestCase):
     def test_verify(self) -> None:
         result = run("verify")
-        self.assertIn("OK: 98 skills, 63 profiles", result.stdout)
+        catalog = tomllib.loads((HUB / "catalog.toml").read_text())["skills"]
+        profiles = list((HUB / "profiles").glob("*.toml"))
+        self.assertIn(f"OK: {len(catalog)} skills, {len(profiles)} profiles", result.stdout)
 
     def test_public_readme_catalog_count_matches_hub(self) -> None:
         catalog = tomllib.loads((HUB / "catalog.toml").read_text())["skills"]
