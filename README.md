@@ -2,9 +2,9 @@
 
 # Skill Hub
 
-### Project-local Agent Skills manager for Claude Code and Codex
+### Automatic project-local Agent Skills manager for Claude Code and OpenAI Codex
 
-**Install once. Let each project get only the skills it actually needs — without turning your global context into a prompt dump or silently overwriting local edits.**
+**Detect the repository, install only the skills it actually needs, keep Claude Code and Codex aligned, and preserve local edits — without turning global context into a prompt dump.**
 
 [![Skill Hub CI](https://github.com/arttvad9r/skill-hub/actions/workflows/skillhub.yml/badge.svg)](https://github.com/arttvad9r/skill-hub/actions/workflows/skillhub.yml)
 [![Release](https://img.shields.io/github/v/release/arttvad9r/skill-hub?display_name=tag)](https://github.com/arttvad9r/skill-hub/releases/latest)
@@ -16,6 +16,24 @@
 </div>
 
 ---
+
+## 30-second tour
+
+```console
+$ skillhub detect .
+Facts: android, jetpack-compose
+Base profiles: android-compose-app
+
+$ skillhub install --project . --profile android-compose-app
+Skills: 3 in claude, codex; copied 6, removed 0
+
+$ skillhub status .
+android-cli                      claude=current, codex=current
+android-emu                      claude=current, codex=current
+edge-to-edge                     claude=current, codex=current
+```
+
+The same project manifest drives project-local skills for both Claude Code and OpenAI Codex. Skill Hub keeps selection conservative, records provenance, and refuses to silently overwrite local edits.
 
 Most Agent Skills repositories help you **find skills**. Skill Hub handles the operational part after that:
 
