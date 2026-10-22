@@ -1,0 +1,4 @@
+name = "motion-video-graphics"
+description = "Motion graphics, kinetic typography, logo animation, and narrated explainers in Remotion."
+extends = ["motion-video"]
+skills = ["remotion-motion-graphics", "remotion-kinetic-typography", "remotion-logo-animation", "remotion-explainer-video"]

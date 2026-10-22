@@ -1,0 +1,4 @@
+name = "motion-ui"
+description = "Interactive UI animation: build, review, audit, opportunity finding, accessibility, and performance."
+extends = ["motion-core"]
+skills = ["animate", "review-animations", "improve-animations", "find-animation-opportunities", "fixing-motion-performance"]

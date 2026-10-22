@@ -57,7 +57,7 @@ flowchart LR
     X --> V
 ```
 
-Current catalog: **98 skills across 63 profiles**. Browse all of them in [CATALOG.md](CATALOG.md).
+Current catalog: **118 skills across 71 profiles**. Browse all of them in [CATALOG.md](CATALOG.md).
 
 ## Quick start
 
@@ -231,6 +231,8 @@ The goal is not to own the biggest skill catalog. The goal is to make a **small,
 | Android / Compose app | `android-compose-app` | `android-navigation`, `android-testing`, `android-security`, `android-performance` |
 | Web UI / site | `design-web` | `security-core` for sensitive flows |
 | General app/desktop UI | `design` | focused platform profile |
+| Interactive UI motion | `motion-ui` | `design-web` when broader web design work is also needed |
+| Programmatic video | `motion-video` | `motion-video-product`, `motion-video-graphics`, `motion-data`, `motion-webgl`, or `motion-math` for the matching job |
 | Dockerized service | `docker-project` | `fastapi`, `security-core` |
 | Existing Docker Compose stack | `docker-compose` | `docker-build`, `docker-safety` |
 | Game project | `game-core` | one genre + only relevant discipline packs |
@@ -246,7 +248,7 @@ The generated [CATALOG.md](CATALOG.md) lists every profile and skill directly on
 - profile → description → resolved skill count;
 - skill → category → source → pinned revision → license.
 
-The library currently has especially deep coverage for **Android, UI/design, game development, accessibility, security, Docker, and FastAPI**. It is deliberately not a generic “everything for every framework” dump.
+The library currently has especially deep coverage for **Android, UI/design, motion/video, game development, accessibility, security, Docker, and FastAPI**. It is deliberately not a generic “everything for every framework” dump.
 
 Engine-specific game packs and broad framework coverage such as React/Node/Rust are not bundled just to inflate the count. New sources are added when they provide enough specialist signal and have usable provenance/licensing.
 

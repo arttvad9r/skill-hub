@@ -1,0 +1,4 @@
+name = "motion-video"
+description = "Programmatic video production with current Remotion guidance and reusable snapcn primitives."
+extends = ["motion-core"]
+skills = ["remotion-production", "snapcn"]

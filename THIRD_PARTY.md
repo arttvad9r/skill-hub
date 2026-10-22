@@ -11,6 +11,12 @@ Skill Hub vendors selected skills from external repositories. The original upstr
 - **Taste Skill / gpt-taste** — https://github.com/Leonxlnx/taste-skill — MIT. Imported revision `f624f37a8c650b9cc550253104925efe4c8de246`. License: `sources/taste-skill/LICENSE`.
 - **Docker Agent Skills** — https://github.com/docker/skills — Apache-2.0. Imported release `v0.3.1`, revision `8afc2c6ef4e0ec2ea8e4ba024d0b884ea930b926`. License: `sources/docker-skills/LICENSE` (copied into each skill as `LICENSE.upstream`).
 - **FastAPI agent skill** — https://github.com/fastapi/fastapi (`fastapi/.agents/skills/fastapi`) — MIT. Imported revision `0b919816378eaa773df7ce4204414c712c9fdbea`. License: `sources/fastapi/LICENSE` (copied into the skill as `LICENSE.upstream`).
+- **Emil Kowalski Skills** — https://github.com/emilkowalski/skills — MIT. Imported revision `2d228630ba1446365f614a108cb8252f1feda202`. License: `sources/emil-skills/LICENSE`.
+- **snapcn** — https://github.com/snapcndev/snapcn — MIT. Imported revision `d40a279cb358c2b76163c516650f5ea181d8dd1a`. License: `sources/snapcn/LICENSE`; vendored workflow notices are preserved where upstream ships them.
+- **iart Data Animation Skills** — https://github.com/iart-ai/data-animation-skills — MIT. Imported revision `8ce2709c3992490251e8a991535b1945f01c6865`. License: `sources/iart-data-animation/LICENSE`.
+- **iart WebGL Animation Skills** — https://github.com/iart-ai/webgl-animation-skills — MIT. Imported revision `50697d659fbf70152f48f9f8aadf1efe78bbdde1`. License: `sources/iart-webgl-animation/LICENSE`.
+- **iart Manim Skill** — https://github.com/iart-ai/manim-skills — MIT. Imported revision `a15833c44de5108a3ee68f178a1fca126aa7c6d8`. License: `sources/iart-manim/LICENSE`.
+- **Remotion Agent Skills** — https://github.com/remotion-dev/skills — referenced at runtime by the project-owned `remotion-production` wrapper; upstream skill text is not vendored because the skills repository does not currently publish explicit redistribution terms.
 - **Vercel Web Interface Guidelines** — https://github.com/vercel-labs/web-interface-guidelines — referenced at runtime by the project-owned `web-design-guidelines` wrapper; guideline text is not vendored here.
 
-`android-emu`, `code-security`, `semgrep`, `llm-security`, and the `web-design-guidelines` wrapper are original Skill Hub material licensed under the root Apache-2.0 license.
+`android-emu`, `code-security`, `semgrep`, `llm-security`, `motion-production`, `remotion-production`, and the `web-design-guidelines` wrapper are original Skill Hub material licensed under the root Apache-2.0 license.
