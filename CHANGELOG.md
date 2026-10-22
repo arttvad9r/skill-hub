@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Refactor `project-workflow` into a smaller progressive-disclosure router with explicit implementation and repository-audit modes.
+- Add impact-surface mapping, reuse-before-write, smallest-complete-change guidance, concrete review findings, risk-triggered regression checks, and optional documented `shortcut:` limits.
+
 ## v0.4.1 — 2026-10-16 — Repository and onboarding polish
 
 - Rework README around the user outcome, automatic project routing, reproducible quick start, safe lifecycle, and common recipes.

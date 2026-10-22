@@ -21,16 +21,7 @@ Do not invent values or resolve product ambiguity for implementation convenience
 
 ## Choosing an implementation approach
 
-Before proposing architecture, inspect relevant code and use this ladder:
-
-1. existing project capability;
-2. platform/native capability;
-3. standard library;
-4. dependency already installed;
-5. maintained external dependency;
-6. custom implementation.
-
-Choose the first level that solves the requirement cleanly. Prefer fewer moving parts and avoid abstractions for hypothetical future variants.
+Inspect relevant code before proposing architecture. Apply the shared reuse-before-custom order from `SKILL.md`, prefer fewer moving parts, and avoid abstractions for hypothetical future variants.
 
 When several materially different approaches remain, compare only real alternatives and state the trade-off that matters to this project. Record an ADR only when the decision is consequential, has credible alternatives, and future reversal or rediscovery would be costly.
 

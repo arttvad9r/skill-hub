@@ -4,7 +4,7 @@ Completion requires evidence that the requested outcome works, not confidence fr
 
 ## 1. Define proof before implementation
 
-For non-trivial work, state the outcome and the evidence that would prove it before changing code. This can live in the active plan, acceptance criteria, or a short working note; do not create a document just for ceremony.
+For non-trivial work, state the outcome and the evidence that would prove it before changing code. This can live in the active plan, acceptance criteria, or working context; do not create a document just for ceremony. Implementation should already have mapped the affected callers/contracts and chosen the smallest complete change rather than a merely small diff.
 
 Prefer the evidence closest to the user's goal:
 
@@ -49,7 +49,9 @@ Typical order:
 
 Do not run expensive unrelated suites merely as ritual. Do not skip a stronger practical check merely because compilation passed.
 
-## 5. Turn repeat failures into guardrails
+## 5. Turn risky or repeated behavior into guardrails
+
+A focused regression check is normally justified for branching business/state logic, parsing/serialization, persistence/data mutation, auth/permissions/money/security, lifecycle/concurrency behavior, or a previously observed regression. Prefer the project's existing test style and one strong check over ceremonial coverage. Trivial constants, copy, layout values, or mechanical renames usually need no new test.
 
 When a bug or missed requirement can be checked mechanically, encode it as a regression test, lint/static rule, eval, or CI/build check instead of adding another prose reminder. Use documentation or a skill only when the lesson genuinely requires human/model judgment. Global instructions are the last resort.
 

@@ -1,39 +1,61 @@
-# Review
+# Change review
 
-Use this mode when judging an existing diff, branch, PR, or completed implementation. Review is evidence gathering, not another implementation pass. Do not modify code unless the user asks for fixes after the findings.
+Use this mode when judging an existing diff, branch, PR, commit range, or completed implementation. Review is evidence gathering, not another implementation pass. Do not modify code unless the user asks for fixes after the findings.
 
-## 1. Establish the review boundary
+## 1. Establish the boundary and intent
 
-Identify the base and changed surface: working tree, merge base, commit range, branch, or explicit files. Read only the requirements, specs, ADRs, and project instructions relevant to that surface.
+Identify the review surface: working tree, merge base, commits, branch, PR, or explicit files. Read the relevant requirements/specs/ADRs/project instructions before judging implementation choices.
 
-## 2. Review on separate axes
+Start with the diff, then read connected code when behavior crosses the changed lines:
 
-Keep these questions distinct so one cannot hide the other:
+- callers/consumers of changed APIs or behavior;
+- important callees and shared helpers the change relies on;
+- relevant tests/fixtures;
+- configuration, schemas, exports/interfaces, persistence, or docs affected by the behavior;
+- the user/data flow through the changed surface.
 
-- **Intent/spec:** Does the change implement the requested behavior completely, without contradictions or unrequested scope?
-- **Engineering quality:** Is the implementation correct, maintainable, secure enough for its risk, consistent with repository conventions, and covered by appropriate verification?
+A change can break code it never edits. When a signature, return contract, state transition, persisted shape, or shared behavior changes, search the affected consumers before concluding the review.
 
-For a large diff, independent read-only passes or subagents can review these axes in parallel. For a small diff, review directly. Never let multiple agents edit the same working tree concurrently.
+## 2. Judge against the real operating context
 
-## 3. Use fresh context when it materially helps
+Determine expected load and deployment shape from repository evidence when relevant. A local script, mobile app, single-process service, and horizontally scaled backend have different failure modes. State a material load assumption if the repository does not make it clear.
 
-For medium/high-risk changes, repeated failed fixes, or substantial uncertainty, prefer an independent reviewer with fresh context when one is available and the extra cost is justified. Give the reviewer the intended outcome, acceptance criteria, changed surface, and verification evidence; avoid priming them with the implementer's defense of the approach.
+Review in this order:
 
-Keep this pass read-only. Verify findings before acting on them. Do not spend an independent review on trivial low-risk edits.
+1. **Intent/spec correctness** — requested behavior is complete, coherent, and does not add unrequested scope.
+2. **Correctness** — results, edge cases, lifecycle/state, callers/contracts, failure paths.
+3. **Security/data integrity** — trust boundaries, auth/permissions, secrets, unsafe writes, destructive ordering, swallowed errors.
+4. **Scale/concurrency** — races, duplicated work, per-process state, unbounded growth, N+1 or unexpectedly expensive paths under expected load.
+5. **Regression evidence** — risky new/fixed behavior has a focused check capable of failing when the bug returns.
+6. **Performance** — material regressions or hot-path waste relevant to this project.
+7. **Lean/maintainability** — dead/speculative code, duplicate logic, unnecessary dependencies/wrappers/config, or responsibilities mixed enough to make correctness hard to reason about.
 
-After roughly two or three meaningful review/fix cycles, persistent serious findings are a signal to reconsider the approach or assumptions rather than continuing an endless patch loop.
+Keep these axes separate so clean code cannot hide wrong behavior and a working happy path cannot hide unsafe architecture.
 
-## 4. Verify findings
+## 3. Verify findings before reporting them
 
-Trace each potential issue to concrete code and, when practical, reproduce it with a focused test, build, static check, or executable scenario. Do not report hypothetical style preferences as defects.
+A material finding requires a concrete case: an input, state, caller, expected-load scenario, test, trace, or code path that demonstrates what can fail or why the cost is real. If there is no concrete failure/risk case, do not report it as a defect.
 
-Prioritize findings by user impact and risk:
+Re-read the relevant lines and verify assumptions. Before calling code unused, search broadly enough to account for tests, fixtures, config, generated/dynamic references, and alternate entry points.
 
-- **Critical:** data loss, serious security/safety issue, unusable core behavior.
-- **High:** requested behavior is wrong or a likely production regression.
-- **Medium:** meaningful edge-case, maintainability, performance, or reliability problem.
-- **Low:** worthwhile cleanup that does not materially affect correctness.
+A documented `shortcut: <limit>, <when to upgrade>` is a deliberate trade-off, not automatically a finding. Report it when current requirements/load cross the limit or the shortcut is unsafe.
 
-## 5. Report findings first
+Propose the smallest credible fix. Avoid style taste, speculative future-proofing, and vague “consider” advice.
 
-For each finding, give the severity, location, concrete failure/risk, and the smallest credible correction. If no material finding exists, say so and state what was actually checked and what remains unverified.
+## 4. Use independent review selectively
+
+For medium/high-risk changes, repeated failed fixes, or meaningful uncertainty, prefer a fresh-context read-only reviewer when available and worth the cost. Give it the intended outcome, acceptance criteria, changed surface, and verification evidence; do not prime it with the implementer's defense.
+
+Verify independent findings before acting on them. After roughly two or three meaningful review/fix cycles, persistent serious findings signal that the approach or assumptions should be reconsidered rather than patched indefinitely.
+
+## 5. Report findings for action
+
+Put findings first and group by action priority:
+
+- **Must fix** — wrong behavior, serious security/data risk, or failure under expected load.
+- **Should fix** — meaningful reliability/performance issue, missing regression guard, duplication or complexity with concrete maintenance cost.
+- **Nice to have** — low-risk simplification or small measurable improvement.
+
+Number findings across groups. For each material finding include: severity/priority, location, what the code is doing, concrete problem, smallest fix, and consequence of leaving it unchanged.
+
+If no material finding exists, say so and state what was actually checked. End with `Not checked:` when an important surface or runtime scenario could not be verified.

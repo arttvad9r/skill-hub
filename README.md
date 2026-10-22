@@ -344,7 +344,7 @@ user request
 project-workflow
     ├─ discovery / bootstrap / plan
     ├─ implementation / debugging
-    ├─ review / verification
+    ├─ review / audit / verification
     └─ handoff / resume
             ↓
         skill-hub

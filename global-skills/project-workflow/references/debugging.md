@@ -14,6 +14,8 @@ Trace the path from expected behavior to observed failure. Narrow the problem by
 
 Distinguish symptom from cause. A downstream null, timeout, render glitch, or exception is not automatically the root cause.
 
+Before editing a shared function, interface, state transition, schema, or lifecycle path, map the affected surface far enough to avoid a local symptom patch: relevant callers/consumers, siblings using the same shared path, tests/fixtures, config/interfaces, persistence, and user-visible flows. Fix the violated assumption once at the narrowest shared root when that is the correct boundary.
+
 For regressions, inspect the smallest relevant history or diff when it can materially shorten the search.
 
 ## 3. Form one testable hypothesis

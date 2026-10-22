@@ -32,16 +32,7 @@ Do not build infrastructure merely to validate demand or feasibility.
 
 When there is a meaningful implementation or product choice, present only viable alternatives. Usually two or three are enough. For each, compare the trade-offs that matter here: complexity, maintenance, UX, compatibility, cost, latency, lock-in, migration risk, or delivery speed.
 
-Recommend one approach and explain why it best fits the stated goal. Do not invent alternatives just to fill a list.
-
-Apply the solution ladder before proposing custom work:
-
-1. existing project capability;
-2. platform/native capability;
-3. standard library;
-4. dependency already installed;
-5. maintained external dependency;
-6. custom implementation.
+Recommend one approach and explain why it best fits the stated goal. Do not invent alternatives just to fill a list. Apply the shared reuse-before-custom order from `SKILL.md`; do not repeat it as a separate design exercise.
 
 ## 5. Exit condition
 

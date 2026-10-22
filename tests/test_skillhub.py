@@ -102,12 +102,18 @@ class SkillHubTests(unittest.TestCase):
         self.assertIn("Explicit user instructions outrank this workflow", workflow)
         self.assertIn("Keep one writer per working tree", workflow)
         self.assertIn("references/review.md", workflow)
+        self.assertIn("references/audit.md", workflow)
+        self.assertIn("references/implementation.md", workflow)
         self.assertIn("references/handoff.md", workflow)
-        shared = workflow.split("## Shared rules", 1)[1].split("## Discover and design", 1)[0]
+        self.assertIn("outcome → evidence → impact surface → reuse → smallest complete change → verify", workflow)
+        self.assertLessEqual(len(workflow.split()), 900, "global project-workflow router should stay compact")
+        shared = workflow.split("## Shared rules", 1)[1].split("## Product ambiguity gate", 1)[0]
         numbers = [int(line.split(".", 1)[0]) for line in shared.splitlines() if line[:1].isdigit()]
         self.assertEqual(numbers, list(range(1, len(numbers) + 1)))
         self.assertIn("## 6. Automation budget", bootstrap)
         self.assertTrue((root / "references/review.md").is_file())
+        self.assertTrue((root / "references/audit.md").is_file())
+        self.assertTrue((root / "references/implementation.md").is_file())
         self.assertTrue((root / "references/handoff.md").is_file())
 
     def test_sync_preserves_modified_retired_skill(self) -> None:
