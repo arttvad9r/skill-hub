@@ -357,6 +357,7 @@ The workflow follows the same broad direction as current agent guidance: concise
 - OpenAI: [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)
 - OpenAI: [Using skills to accelerate OSS maintenance](https://developers.openai.com/blog/skills-agents-sdk)
 - Anthropic: [Agent Skills](https://www.anthropic.com/research/skills)
+- Ponytail 5: [smallest complete change, connected-code review, and repository-audit ideas](https://github.com/DietrichGebert/ponytail/releases/tag/v5.0.0), adapted here into Skill Hub's multi-agent progressive-disclosure workflow rather than bundled as a dependency.
 
 ## Verification and evals
 
